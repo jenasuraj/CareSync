@@ -15,8 +15,10 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { LuPanelLeftClose } from "react-icons/lu";
 import { RiMoneyRupeeCircleLine } from "react-icons/ri";
 import { AiOutlineMedicineBox } from "react-icons/ai";
-import { GoHistory } from "react-icons/go";
 import { TbHealthRecognition } from "react-icons/tb";
+import { MdOutlineMessage } from "react-icons/md";
+import { GiHealthNormal } from "react-icons/gi";
+import { GoHistory } from "react-icons/go";
 
 
 export const doctors = [
@@ -168,3 +170,23 @@ export const dashboard_items = [
     icon:<LuPanelLeftClose size={20}/>,
   },
 ];
+
+
+
+export const patient_page_items = [
+  {id:1,
+   name:'Book Appointment',
+   icon:<MdOutlineMessage size={25} color='white'/>,
+   path:'/dashboard/patient/appointment',
+  },
+  {id:2,
+    name:'Track Healthcare',
+   icon:<GiHealthNormal size={25} color='white'/>,
+   path:'/dashboard/patient/track_health',
+  },
+    {id:3,
+   name:'History',
+   icon:<GoHistory size={25} color='white'/>,
+   path:'/dashboard/patient/history', 
+  }
+] 

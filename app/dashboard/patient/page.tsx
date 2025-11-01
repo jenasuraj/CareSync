@@ -2,10 +2,8 @@ import React from 'react'
 import { Metadata } from 'next'
 import img from '@/public/dashboard-img.jpg'
 import Image from 'next/image';
-import { MdOutlineMessage } from "react-icons/md";
-import { GiHealthNormal } from "react-icons/gi";
-import { GoHistory } from "react-icons/go";
 import Link from 'next/link';
+import { patient_page_items } from '@/data/Doctor';
 
 export const metadata: Metadata = {
   title: "Patient Dashboard page",
@@ -13,24 +11,7 @@ export const metadata: Metadata = {
 };
 
 const page = () => {
-
-const items = [
-  {id:1,
-   name:'Book Appointment',
-   icon:<MdOutlineMessage size={25} color='white'/>,
-   path:'/dashboard/patient/appointment',
-  },
-  {id:2,
-    name:'Track Healthcare',
-   icon:<GiHealthNormal size={25} color='white'/>,
-   path:'/dashboard/patient/track_health',
-  },
-    {id:3,
-   name:'History',
-   icon:<GoHistory size={25} color='white'/>,
-   path:'/dashboard/patient/history', 
-  }
-]  
+ 
 
 return (
 <>
@@ -55,7 +36,7 @@ className="object-cover absolute inset-0 rounded-lg"
 
 {/**feature section */}
 <div className='w-full h-auto flex flex-col md:flex-row gap-5'>
-{items.map((item,index)=>{
+{patient_page_items.map((item,index)=>{
   return(
     <Link href={item.path} key={index} className='bg-sky-50 w-full md:w-1/3 h-40 border border-gray-300 shadow-sm rounded-sm flex items-center justify-center gap-2 hover:cursor-pointer hover:bg-blue-900 hover:text-white duration-700'>
       <p>{item.name}</p>
