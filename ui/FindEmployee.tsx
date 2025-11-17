@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Employee } from "@/types/Employee";
 
 interface ShowEmployeeProps {

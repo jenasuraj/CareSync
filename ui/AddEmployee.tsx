@@ -56,7 +56,7 @@ useEffect(() => {
       return
       }   
     try{
-      const response = await axios.post('/api/dashboard/uploadEmployees',{formData,currentPage})
+      const response = await axios.post('/api/dashboard/admin/crud_employees',{formData,currentPage})
       setMessage(response?.data?.message)
       }
       catch (err) {
