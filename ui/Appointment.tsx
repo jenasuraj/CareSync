@@ -6,7 +6,8 @@ import { LiaSearchPlusSolid } from "react-icons/lia";
 import Image from "next/image";
 import { AxiosError } from "axios";
 import { appointmentFormdata,doctorProperty } from "@/types/Employee";
-
+import img from '@/public/dashboard-img.jpg'
+import ImageLayout from "./ImageLayout";
 
 const Appointment = () => {
   const currentDate = new Date();
@@ -101,21 +102,24 @@ const Appointment = () => {
       )}
 
       {!doctorSelected ? (
-        <div className="min-h-screen w-full flex flex-col items-center justify-center bg-white p-4 gap-10">
+        <div className="min-h-screen w-full flex flex-col items-center  bg-white p-2 gap-10">
+          <ImageLayout img={img}>
           <div className="flex items-center gap-3 text-center">
-            <p className="text-2xl md:text-3xl font-semibold text-blue-900">
+            <p className="text-2xl md:text-3xl text-white">
               Choose the Date for Your Appointment
             </p>
-            <LiaSearchPlusSolid className="text-blue-700" size={38} />
+            <LiaSearchPlusSolid className="text-white" size={38} />
           </div>
 
-          <div className="flex items-center w-full md:w-2/3 bg-white rounded-lg overflow-hidden border border-gray-300">
+          <div className="flex items-center w-full  bg-white rounded-lg overflow-hidden border border-gray-300">
             <input
               type="date"
               className="flex-1 px-5 py-3 h-[9vh] text-gray-700 focus:outline-none rounded-sm"
               onChange={(e) => setDate(e.target.value)}
             />
           </div>
+          </ImageLayout>
+
 
           {doctors.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10 w-8/12">
@@ -148,7 +152,7 @@ const Appointment = () => {
       ) : (
         <form
           onSubmit={handleSubmit}
-          className="w-full md:w-2/3 gap-5 border border-gray-300 h-auto shadow-xl p-4 mt-10 rounded-md py-10"
+          className="w-full md:w-2/3 gap-5 border border-gray-300  h-auto shadow-sm p-4 mt-10 rounded-4xl py-10"
         >
           <h1 className="w-full text-center text-blue-900 text-3xl p-4">
             Book an Appointment with {doctorSelected}
@@ -201,7 +205,7 @@ const Appointment = () => {
             type="submit"
             className="w-full bg-blue-900 text-white p-2 rounded-sm mt-4 hover:bg-blue-800 transition"
           >
-            Book Appointment
+            Pay & Book Appointment
           </button>
 
           <button

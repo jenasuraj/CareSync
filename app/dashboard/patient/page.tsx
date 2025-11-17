@@ -1,9 +1,9 @@
 import React from 'react'
 import { Metadata } from 'next'
 import img from '@/public/dashboard-img.jpg'
-import Image from 'next/image';
 import Link from 'next/link';
 import { patient_page_items } from '@/data/Doctor';
+import ImageLayout from '@/ui/ImageLayout';
 
 export const metadata: Metadata = {
   title: "Patient Dashboard page",
@@ -16,22 +16,11 @@ return (
 <>
 <section className='min-h-screen w-full text-gray-700 flex p-2 flex-col gap-5'>
 
-{/**img section */}
-<div className='relative w-full h-[40vh] rounded-lg  border border-gray-200 shadow-sm flex items-center justify-center'>
-<Image
-src={img}
-alt='img'
-fill
-priority
-className="object-cover absolute inset-0 rounded-lg"
-/>
-<div className='w-full h-full bg-black/60 absolute z-10 rounded-lg'></div>
-<div className='text-center flex flex-col items-center justify-center gap-4 absolute z-20'>
-<p className='text-white text-3xl md:text-5xl '>Welcome to Medicure</p>
-<p className='text-white text-xl md:text-3xl'>What are your plans today ?</p>
-</div>
-</div>
 
+<ImageLayout img={img}>
+        <p className='text-white text-3xl md:text-5xl '>Welcome to Medicure</p>
+        <p className='text-white text-xl md:text-3xl'>What are your plans today ?</p>
+</ImageLayout>
 
 {/**feature section */}
 <div className='w-full h-auto flex flex-col md:flex-row gap-5'>
