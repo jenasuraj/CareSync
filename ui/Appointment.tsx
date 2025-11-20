@@ -152,7 +152,7 @@ const Appointment = () => {
       ) : (
         <form
           onSubmit={handleSubmit}
-          className="w-full md:w-2/3 gap-5 border border-gray-300  h-auto shadow-sm p-4 mt-10 rounded-4xl py-10"
+          className="w-full md:w-2/3 gap-5 border border-gray-300  h-auto shadow-sm p-6 mt-10 rounded-4xl py-10"
         >
           <h1 className="w-full text-center text-blue-900 text-3xl p-4">
             Book an Appointment with {doctorSelected}

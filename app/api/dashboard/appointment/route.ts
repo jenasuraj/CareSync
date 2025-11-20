@@ -7,12 +7,24 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { name, phone, date, address, doctorId, p_id, symptoms } = body;
     console.log("in server",name,phone,date,address,doctorId,p_id,symptoms)
-const formattedSymptoms = `{${symptoms.join(',')}}`; // → "{fever}" or "{fever,cold}"
-await sql`
-  INSERT INTO appointments (name, phone, date, address, d_id, p_id, symptoms)
-  VALUES (${name}, ${phone}, ${date}, ${address}, ${doctorId}, ${p_id}, ${formattedSymptoms});
-`;
-
+    if(!name || !phone || !date || !address || !doctorId ||symptoms.length == 0 ){
+      return NextResponse.json(
+      {
+        message: "Server error missing details.",
+        success: false,
+      },
+      { status: 400 }
+    );
+    }
+    else{
+    const money_type:string = "appointment"
+    const money: number = 200
+  await sql`INSERT INTO amount(money_type,amount) VALUES(${money_type},${money})`    
+  const formattedSymptoms = `{${symptoms.join(',')}}`; // → "{fever}" or "{fever,cold}"
+  await sql`
+    INSERT INTO appointments (name, phone, date, address, d_id, p_id, symptoms)
+    VALUES (${name}, ${phone}, ${date}, ${address}, ${doctorId}, ${p_id}, ${formattedSymptoms});
+  `;
     return NextResponse.json(
       {
         message: "Appointment booked successfully.",
@@ -20,6 +32,8 @@ await sql`
       },
       { status: 201 }
     );
+    }
+
   } catch (error) {
     console.error("Error booking appointment:", error);
     return NextResponse.json(

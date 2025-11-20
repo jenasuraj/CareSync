@@ -4,6 +4,8 @@ import img from '@/public/dashboard-img.jpg'
 import Link from 'next/link';
 import { patient_page_items } from '@/data/Doctor';
 import ImageLayout from '@/ui/ImageLayout';
+import CheckForPatient from '@/ui/CheckForPatient';
+
 
 export const metadata: Metadata = {
   title: "Patient Dashboard page",
@@ -12,6 +14,7 @@ export const metadata: Metadata = {
 
 
 const page = () => {
+  console.log("hi i am in server")
 return (
 <>
 <section className='min-h-screen w-full text-gray-700 flex p-2 flex-col gap-5'>
@@ -33,8 +36,9 @@ return (
   )
 })}
 </div>
-
+<CheckForPatient/>
 </section>
+
 </>
   )
 }
