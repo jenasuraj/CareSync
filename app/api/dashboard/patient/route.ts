@@ -8,7 +8,21 @@ import { neon } from '@neondatabase/serverless';
 export async function GET(req: NextRequest) {
   try {
     const sql = neon(process.env.POSTGRES_URL!);
-
+    const { searchParams } = new URL(req.url);
+    let name: string | null = searchParams.get("name");
+    if(name){
+      name = name.toLowerCase() + '%'
+      console.log("in server",name)
+      const response = await sql `SELECT * FROM patients WHERE name LIKE ${name}`
+      console.log("response is",response)
+      if(response.length>0){
+        return NextResponse.json({message:"all patients are here",data:response,success:true},{status:200})
+      }
+      else{
+        return NextResponse.json({message:"No any patient is here with this name",success:false},{status:404})
+      }
+    }
+    
     // Extract email from JWT or NEXT-AUTH
     const token = req.cookies.get("token")?.value;
     const nextAuthToken = req.cookies.get("next-auth.session-token")?.value;
@@ -83,6 +97,7 @@ export async function GET(req: NextRequest) {
     });
 
   } catch (error) {
+    console.log(error)
     return NextResponse.json(
       { message: "server error", success: false, error },
       { status: 500 }
