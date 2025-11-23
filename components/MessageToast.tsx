@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { useAuth } from "@/context/AppContext";// adjust path
-import { BsEmojiAngry } from "react-icons/bs";
+import { HiOutlineEmojiHappy } from "react-icons/hi";
 
 
 const MessageToast = () => {
@@ -22,7 +22,7 @@ useEffect(() => {
     <>
       {message && (
           <div className="fixed top-10 right-10 z-50 flex p-8 items-center justify-between bg-gradient-to-r from-green-800 to-green-600 text-white px-6 py-3 rounded-md shadow-lg min-w-[250px]">
-          <span className="mr-4 flex gap-2 items-center">{message} <BsEmojiAngry size={18} color="white"/></span>
+          <span className="mr-4 flex gap-2 items-center">{message} <HiOutlineEmojiHappy size={18} color="white"/></span>
         </div>
       )}
       {loading && (

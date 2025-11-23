@@ -9,7 +9,7 @@ const Sidebar = ({ role }: { role: string}) => {
   const pathname = usePathname()
   const [sidebarOpen,setSidebarOpen] = useState(true)
 return (
-<aside className={`flex flex-col border-t border-gray-500 ${!sidebarOpen ? 'w-20 bg-blue-900':'w-40 md:w-[50vh] bg-gradient-to-t from-violet-700 to-indigo-800 text-white'}  gap-2 min-h-screen `}>
+<aside className={`flex flex-col border-t border-gray-600 ${!sidebarOpen ? 'w-20 bg-blue-900':'w-40 md:w-[50vh] bg-gradient-to-t from-violet-700 to-indigo-800 text-white'}  gap-2 min-h-screen `}>
 {sidebarOpen ? dashboard_items.map((item, index) => {
       if (item.genre && item.genre !== role) return null;
       return (

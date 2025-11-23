@@ -9,6 +9,7 @@ import { useState } from "react";
 import { BsTrash } from "react-icons/bs";
 import { GoDotFill } from "react-icons/go";
 import { LiaEditSolid } from "react-icons/lia";
+import Modal from "@/components/Modal";
 
 
 
@@ -87,6 +88,7 @@ useEffect(() => {
   try{
      const response = await axios.put(`/api/dashboard/admin/crud_employees`,{id,target})
      setMessage(response?.data?.message);
+     setPageRefreshed(true)
    }
   catch (err) {
         const error = err as AxiosError<{ message: string }>;
@@ -99,35 +101,25 @@ useEffect(() => {
     setAppointment(0)
   }
 
-  return (
-    <>
-    {/* Appointment Modal */}
-{showModal && (
-  <div className="fixed inset-0 bg-white/80 bg-opacity-50 flex items-center justify-center z-50">
-    <div className="bg-white p-5 rounded border border-gray-300 shadow-md w-96 max-h-[80vh] overflow-y-auto relative">
-      <button
-        className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
-        onClick={()=>closeModal()}
-      >
-        ✕
-      </button>
-      <h2 className="text-lg font-semibold mb-3">Todays Appointments</h2>
-
-      {appointmentData.length > 0 ? (
-        <ul>
-          {appointmentData.map((appt, idx) => (
-            <li key={idx} className="border-b py-2 flex justify-between">
-              <span>{appt.name}</span>
-              <span>{appt.phone}</span>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-center text-gray-600">No appointments for today.</p>
+return (
+<>
+      {/* Appointment Modal */}
+      {showModal && (
+        <Modal closeModal={closeModal} heading="Todays Appointments">
+            {appointmentData.length > 0 ? (
+              <ul>
+                {appointmentData.map((appt, idx) => (
+                  <li key={idx} className="border-b py-2 flex justify-between">
+                    <span>{appt.name}</span>
+                    <span>{appt.phone}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-center ">No appointments for today.</p>
+            )}
+        </Modal>
       )}
-    </div>
-  </div>
-)}
 
       {/* ✅ Employee Table */}
       <section className="overflow-x-auto w-auto p-2 ">
