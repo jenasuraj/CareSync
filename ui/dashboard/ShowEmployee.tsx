@@ -6,17 +6,24 @@ import Image from "next/image";
 import { AxiosError } from "axios";
 import { Employee } from "@/types/Employee";
 import { useState } from "react";
+import { BsTrash } from "react-icons/bs";
+import { GoDotFill } from "react-icons/go";
+import { LiaEditSolid } from "react-icons/lia";
+
+
 
 interface ShowEmployeeProps {
   currentPage: string;
   items: Employee[];
-  setItems: React.Dispatch<React.SetStateAction<Employee[]>>;
   message: string;
   setMessage: React.Dispatch<React.SetStateAction<string>>; 
+  setLoading:React.Dispatch<React.SetStateAction<boolean>>;
+  setPageRefreshed:React.Dispatch<React.SetStateAction<boolean>>
+  loading:boolean
 }
 
-const ShowEmployee = ({ currentPage, items, setItems, message,setMessage }: ShowEmployeeProps) => {
-  const [loading, setLoading] = useState(false);
+const ShowEmployee = ({ currentPage, items, setMessage,setLoading,loading,setPageRefreshed}: ShowEmployeeProps) => {
+
   const [appointment,setAppointment] = useState(0) 
   const [appointmentData, setAppointmentData] = useState<{name: string, phone: string}[]>([]);
   const [showModal, setShowModal] = useState(false);
@@ -32,27 +39,11 @@ const ShowEmployee = ({ currentPage, items, setItems, message,setMessage }: Show
     const error = err as AxiosError<{ message: string }>;
     setMessage(error.response?.data?.message || "Something went wrong");
   }
+  setPageRefreshed(true)
   setLoading(false)
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      console.log("db call is made to fetch data...");
-      try {
-        setLoading(true);
-        const response = await axios.get("/api/dashboard/admin/crud_employees", {
-          params: { currentPage },
-        });
-        setItems(response.data.data || []);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [currentPage, message]);
-
+  
 useEffect(() => {
   if (appointment > 0) {
     const fetchAppointmentData = async () => {
@@ -139,15 +130,9 @@ useEffect(() => {
 )}
 
       {/* ✅ Employee Table */}
-      <section className="relative w-full h-full p-3 overflow-x-auto">
-        {loading && (
-          <div className="bg-white/90 absolute z-10 inset-0 flex items-center justify-center text-lg text-gray-600">
-            Fetching information from database, please wait...
-          </div>
-        )}
-
+      <section className="overflow-x-auto w-auto p-2 ">
         {items.length > 0 ? (
-          <table className="min-w-full border border-gray-300 divide-y divide-gray-200">
+          <table className="w-full table-auto border border-gray-300 divide-y divide-gray-200">
             <thead className="bg-gray-100">
               <tr>
                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Photo</th>
@@ -160,16 +145,17 @@ useEffect(() => {
                 )}
                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Department</th>
                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Experience</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Profile</th>
+                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Delete</th>
+                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Update</th>
               </tr>
             </thead>
 
             <tbody className="bg-white divide-y divide-gray-200">
               {items.map((item,index) => (
-                <tr key={index} className="hover:bg-gray-50 transition cursor-pointer" onClick={()=>setAppointment(item?.id)}>
+                <tr key={index} className="hover:bg-gray-50 transition cursor-pointer">
                   <td className="px-2 py-2">
                     <div className="w-12 h-12 relative rounded-full overflow-hidden">
-                      <Image
+                      <Image onClick={currentPage == 'Doctors' ? ()=>setAppointment(item?.id): undefined}
                         src={`https://res.cloudinary.com/dfxzsq5zj/image/upload/v1762148066/${item.image}.jpg`}
                         alt={item.name || "Employee"}
                         fill
@@ -181,11 +167,9 @@ useEffect(() => {
                   <td className="px-4 py-2">{item.phone}</td>
                   {currentPage == 'Doctors' ?(
                    <td className="px-4 py-2">
-                      <p
-                        className={`${item.status === 'active' ? 'bg-green-500' : 'bg-red-500'} cursor-pointer inline-block p-1 rounded-sm text-white`}
-                        onClick={() => handleChangeActive(item?.id,index)}
-                      >
-                        {item.status}
+                      <p className={`cursor-pointer inline-block p-1 rounded-sm text-white`}
+                        onClick={() => handleChangeActive(item?.id,index)}>
+                        {item.status == 'active' ? <GoDotFill color="lightgreen" size={25}/> : <GoDotFill color="red" size={25}/>}
                       </p>
                     </td>
                   ):(
@@ -196,9 +180,16 @@ useEffect(() => {
                   <td className="px-4 py-2">
                     <button
                       onClick={() => handleDeleteDoctor(item?.id)} // ✅ opens full object
-                      className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-800 transition"
+                      className=" cursor-pointer"
                     >
-                      Delete
+                    <BsTrash size={20} color="red"/>
+                    </button>
+                  </td>
+                  <td className="px-4 py-2">
+                    <button
+                      className="ml-2 cursor-pointer"
+                    >
+                    <LiaEditSolid size={22} color="blue"/>
                     </button>
                   </td>
                 </tr>

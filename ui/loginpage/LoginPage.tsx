@@ -1,25 +1,38 @@
 "use client"
+
 import React, { useState } from "react";
 import axios from "axios";
-import GoogleLogin from "./GoogleLogin";
+import GoogleLogin from "../GoogleLogin";
 import { useSearchParams } from "next/navigation";
 import { AxiosError } from "axios";
+import Button from "@/components/Button";
+import Input from "@/components/Input";
+import { useAuth } from "@/context/AppContext";
+import { useEffect } from "react";
 
 const LoginPage = () => {
-  const searchParams = useSearchParams()
+  const {setMessage} = useAuth()
+  const searchParams = useSearchParams();
   const [isLogin, setIsLogin] = useState(true);
-  const [formData,setFormData] = useState({email:'',name:'',password:'',hospital_id:'',hospital_password:''}) 
-  const [patientPortal,setPatientPortal] = useState(true)
+  const [formData,setFormData] = useState({email:'',name:'',password:'',hospital_id:'',hospital_password:''}); 
+  const [patientPortal,setPatientPortal] = useState(true);
   const errorMsg = searchParams.get("error");
 
+  useEffect(()=>{
+  if(errorMsg == "use-local-account"){
+    setMessage("Please login using your manual username and password.")
+  }
+  else if(errorMsg == "server-error"){
+    setMessage("Server error occurred. Try again later.")
+  }
+  },[errorMsg])
 
-  const [userMsg, setUserMsg] = useState(() => {
-  if (errorMsg === "use-local-account") return "Please login using your manual username and password.";
-  if (errorMsg === "server-error") return "Server error occurred. Try again later.";
-  return "";
-  });
+  //const [userMsg, setUserMsg] = useState(() => {
+  //if (errorMsg === "use-local-account") return "Please login using your manual username and password.";
+  //if (errorMsg === "server-error") return "Server error occurred. Try again later.";
+  //return "";
+  //});
   
-
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -33,25 +46,25 @@ const LoginPage = () => {
       try {
         const serverResponse = await axios.post("/api/auth/login",{formData}) 
         if(serverResponse){
-        setUserMsg(serverResponse.data.message)
+        setMessage(serverResponse.data.message)
         window.location.reload()
         } 
         }
       catch (err) {
   const error = err as AxiosError<{ message: string }>;
-  setUserMsg(error.response?.data?.message || "Something went wrong");
+  setMessage(error.response?.data?.message || "Something went wrong");
 }
     } else if(!isLogin && patientPortal) {
       if(!formData.email || !formData.password || !formData.name) return;
       try {
         const serverResponse = await axios.post("/api/auth/registration",{formData}) 
         if(serverResponse){
-        setUserMsg(serverResponse?.data?.message)
+        setMessage(serverResponse?.data?.message)
         setIsLogin(true)
         }
       }   catch (err) {
         const error = err as AxiosError<{ message: string }>;
-        setUserMsg(error.response?.data?.message || "Something went wrong");
+        setMessage(error.response?.data?.message || "Something went wrong");
       }
     }
     else{
@@ -65,100 +78,50 @@ const LoginPage = () => {
       }
       catch (err) {
   const error = err as AxiosError<{ message: string }>;
-  setUserMsg(error.response?.data?.message || "Something went wrong");
+  setMessage(error.response?.data?.message || "Something went wrong");
 }
     }
   };
 
 
-
-  
   return (
-    <form onSubmit={handleSubmit} className="p-10 rounded-2xl shadow-2xl w-full max-w-md border border-gray-700">
+    <form onSubmit={handleSubmit} className="p-10 rounded-2xl shadow-2xl w-full max-w-md border border-gray-700 mt-10 gap-2">
       <h2 className="text-3xl mb-6 text-center">
         {!patientPortal ? "Admin portal": patientPortal && isLogin ? 'User Login Page' : patientPortal && !isLogin ? 'User Registration': ''}
       </h2>
-
       {!isLogin && patientPortal && (
         <div className="mb-4">
           <label className="block mb-2">Name</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Enter Your Name"
-            className="w-full px-3 py-2 rounded-md border border-gray-700 focus:outline-none focus:border-blue-500"
-            required
-          />
+          <Input placeholder="Enter your name"size="lg" style="outline" valueData={formData.name} handleChange={handleChange} type="text" name="name"/> 
         </div>
       )}
-
       {patientPortal && (
         <>
           <div className="mb-4">
-            <label className="block mb-2">Email</label>
-            <input
-              type="email"
-              value={formData.email}
-              name="email"
-              onChange={handleChange}
-              placeholder="Enter Your Email"
-              className="w-full px-3 py-2 rounded-md border border-gray-700 focus:outline-none focus:border-blue-500"
-              required
-            />
+           <label className="block mb-2">Email</label>
+           <Input placeholder="Enter your Email"size="lg" style="outline" valueData={formData.email} handleChange={handleChange} type="text" name="email"/> 
           </div>
           <div className="mb-6">
             <label className="block mb-2">Password</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter Your password"
-              className="w-full px-3 py-2 rounded-md border border-gray-700 focus:outline-none focus:border-blue-500"
-              required
-            />
+            <Input placeholder="Enter your password"size="lg" style="outline" valueData={formData.password} handleChange={handleChange} type="password" name="password"/> 
           </div>
         </>
       )}
-
       {!patientPortal && (
         <>
           <div className="mb-4">
             <label className="block mb-2">Hospital ID</label>
-            <input
-              type="text"
-              value={formData.hospital_id}
-              name="hospital_id"
-              onChange={handleChange}
-              placeholder="Enter Hospital ID"
-              className="w-full px-3 py-2 rounded-md border border-gray-700 focus:outline-none focus:border-blue-500"
-              required
-            />
+            <Input placeholder="Enter your Hospital Id"size="lg" style="outline" valueData={formData.hospital_id} handleChange={handleChange} type="text" name="hospital_id"/> 
           </div>
           <div className="mb-6">
             <label className="block mb-2">Hospital Password</label>
-            <input
-              type="password"
-              name="hospital_password"
-              value={formData.hospital_password}
-              onChange={handleChange}
-              placeholder="Enter Your password"
-              className="w-full px-3 py-2 rounded-md border border-gray-700 focus:outline-none focus:border-blue-500"
-              required
-            />
+            <Input placeholder="Enter your Hospital Password"size="lg" style="outline" valueData={formData.hospital_password} handleChange={handleChange} type="text" name="hospital_password"/> 
           </div>
         </>
       )}
-
-      <button
-        type="submit"
-        className="w-full bg-blue-600 hover:bg-blue-700 transition-colors py-2 rounded-md text-white font-semibold mb-4">
-        {!patientPortal ? "Access" : isLogin && patientPortal ? "Login": !isLogin && patientPortal ? 'Register': ''}
-      </button>
-
-      {/* ✅ Google Login Button */}
+      <Button size="lg" style="primary">
+          {!patientPortal ? "Access" : isLogin && patientPortal ? "Login": !isLogin && patientPortal ? 'Register': ''}
+      </Button>
       <GoogleLogin patientPortal = {patientPortal}/>
 
       {patientPortal && (
@@ -172,15 +135,12 @@ const LoginPage = () => {
           </span>
         </p>
       )}
-
       <p className="text-center mt-2 text-sm text-gray-400 gap-2">
         {!patientPortal ? 'Access the user portal':'Access the Admin portal'}
         <span onClick={()=>setPatientPortal(!patientPortal)} className="font-bold cursor-pointer hover:underline ml-2 text-blue-500">
           {!patientPortal ? 'User' : 'Admin'}
         </span>
       </p>
-
-      <p className="text-pink-500 mt-5 text-center">{userMsg}</p>
     </form>
   )
 }

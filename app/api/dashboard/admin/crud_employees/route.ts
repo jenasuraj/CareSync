@@ -58,15 +58,21 @@ export async function DELETE(req: NextRequest) {
     }
 }
 
-
 export async function GET(req: NextRequest) {
   const sql = neon(process.env.POSTGRES_URL!);
   const { searchParams } = new URL(req.url);
   const current = searchParams.get("currentPage");
-  const table = current?.toLocaleLowerCase()
+  const employeeName = searchParams.get("employeeName");
+  const table = current?.toLowerCase()
 
-  if(table == 'doctors'){
-  const employeeLists = await sql `SELECT * FROM doctors`;
+if (table === 'doctors') {
+  console.log("in dest", employeeName, table);
+  const query = !employeeName
+    ? sql`SELECT * FROM doctors ORDER BY experience DESC LIMIT 5`
+    : sql`SELECT * FROM doctors WHERE LOWER(name) LIKE ${'%' + employeeName.toLowerCase() + '%'}`;
+
+  const employeeLists = await query;
+
   return NextResponse.json(
     {
       message: `List of doctors from server.`,
@@ -75,9 +81,15 @@ export async function GET(req: NextRequest) {
     },
     { status: 200 }
   );
-  }
-  else if(table == 'nurses'){
-  const employeeLists = await sql `SELECT * FROM nurses`;
+}
+
+else if (table === 'nurses') {
+  const query = !employeeName
+    ? sql`SELECT * FROM nurses ORDER BY experience DESC LIMIT 5`
+    : sql`SELECT * FROM nurses WHERE LOWER(name) LIKE ${'%' + employeeName.toLowerCase() + '%'}`;
+
+  const employeeLists = await query;
+
   return NextResponse.json(
     {
       message: `List of nurses from server.`,
@@ -86,9 +98,15 @@ export async function GET(req: NextRequest) {
     },
     { status: 200 }
   );
-  }
-  else if(table == 'pharmacists'){
-  const employeeLists = await sql `SELECT * FROM pharmacists`;
+}
+
+else if (table === 'pharmacists') {
+  const query = !employeeName
+    ? sql`SELECT * FROM pharmacists ORDER BY experience DESC LIMIT 5`
+    : sql`SELECT * FROM pharmacists WHERE LOWER(name) LIKE ${'%' + employeeName.toLowerCase() + '%'}`;
+
+  const employeeLists = await query;
+
   return NextResponse.json(
     {
       message: `List of pharmacists from server.`,
@@ -97,22 +115,26 @@ export async function GET(req: NextRequest) {
     },
     { status: 200 }
   );
-  }
-  else{
-  const employeeLists = await sql `SELECT * FROM others`;
+}
+
+else { // others
+  const query = !employeeName
+    ? sql`SELECT * FROM others ORDER BY experience DESC LIMIT 5`
+    : sql`SELECT * FROM others WHERE LOWER(name) LIKE ${'%' + employeeName.toLowerCase() + '%'}`;
+
+  const employeeLists = await query;
+
   return NextResponse.json(
     {
-      message: `List of others from server.`,
+      message: `List of other employees from server.`,
       success: true,
       data: employeeLists,
     },
     { status: 200 }
   );
-  }
 }
 
-
-
+}
 
 export async function POST(req:NextRequest) {
     const body = await req.json()
@@ -120,26 +142,25 @@ export async function POST(req:NextRequest) {
     const parsedExperience: number = Number(experience) 
     const sql = neon(process.env.POSTGRES_URL!);
 
-    if(body?.currentPage == "Doctors")
-    {
-    console.log("i am in doctor post section...")    
-    const isUserExists = await sql`SELECT * FROM doctors WHERE email =${body?.formData?.email}`;
+    try{
+      if(body?.currentPage == "Doctors")
+    {    
+    const isUserExists = await sql`SELECT * FROM doctors WHERE email =${body?.formData?.email} OR phone = ${body?.formData?.ph_no}`;
     if(isUserExists.length>0){
-     return NextResponse.json({message:"Doctor already exists or the email/phone is already taken",success:false},{status:409})
+     return NextResponse.json({message:"The Email/Phone is already taken",success:false},{status:404})
     }
     const response = await sql`
       INSERT INTO doctors (name, email, phone,department,image,experience)
       VALUES (${body?.formData.name}, ${body?.formData.email}, ${body?.formData?.ph_no},${body?.formData?.department},${body?.formData?.file},${parsedExperience})
       RETURNING *;`;
-    return NextResponse.json({ success: true, message: "Doctor registered successfully",data:response[0]},{status:201});
+    return NextResponse.json({ success: true, message: "Doctor registered successfully",data:response[0]},{status:200});
     }
 
     else if(body?.currentPage == "Others")
-    {
-    console.log("i am in other post section...")    
-    const isUserExists = await sql`SELECT * FROM others WHERE email =${body?.formData?.email}`;
+    {  
+    const isUserExists = await sql`SELECT * FROM others WHERE email =${body?.formData?.email} OR phone = ${body?.formData?.ph_no}`;
     if(isUserExists.length>0){
-     return NextResponse.json({message:"Other is already exists or the email/phone is already taken",success:false},{status:409})
+     return NextResponse.json({message:"The Email/phone is already taken",success:false},{status:404})
     }
     const response = await sql`
       INSERT INTO others (name, email, phone,department,image,experience)
@@ -151,9 +172,9 @@ export async function POST(req:NextRequest) {
     else if(body?.currentPage == "Pharmacists")
     {
     console.log("i am in pharma post section...")    
-    const isUserExists = await sql`SELECT * FROM pharmacists WHERE email =${body?.formData?.email}`;
+    const isUserExists = await sql`SELECT * FROM pharmacists WHERE email =${body?.formData?.email} OR phone = ${body?.formData?.ph_no}`;
     if(isUserExists.length>0){
-     return NextResponse.json({message:"pharmacist is already exists or the email/phone is already taken",success:false},{status:409})
+     return NextResponse.json({message:"The email/phone is already taken",success:false},{status:404})
     }
     const response = await sql`
       INSERT INTO pharmacists (name, email, phone,image,experience)
@@ -161,14 +182,12 @@ export async function POST(req:NextRequest) {
       RETURNING *;`;
     return NextResponse.json({ success: true, message: `pharmacists registered successfully`,data:response[0]},{status:201});
     }
-
-
     else if(body?.currentPage == "Nurses")
     {
     console.log("i am in nurse post section...")    
-    const isUserExists = await sql`SELECT * FROM nurses WHERE email =${body?.formData?.email}`;
+    const isUserExists = await sql`SELECT * FROM nurses WHERE email =${body?.formData?.email} OR phone = ${body?.formData?.ph_no}`;
     if(isUserExists.length>0){
-     return NextResponse.json({message:"Nurse is already exists or the email/phone is already taken",success:false},{status:409})
+     return NextResponse.json({message:"The Email/phone is already taken",success:false},{status:409})
     }
     const response = await sql`
       INSERT INTO nurses (name, email, phone,image,experience)
@@ -176,7 +195,11 @@ export async function POST(req:NextRequest) {
       RETURNING *;`;
     return NextResponse.json({ success: true, message: `Nurse registered successfully`,data:response[0]},{status:201});
     }
-
+    }
+    catch(err){
+      console.log(err)
+      return NextResponse.json({ success: false, message: `Server Error`,data:err},{status:500});
+    }
 } 
 
 export async function PUT(req:NextRequest) {

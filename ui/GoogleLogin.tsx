@@ -18,7 +18,7 @@ const handleGoogleLogin = async () => {
         <button
           type="button"
           onClick={handleGoogleLogin}
-          className="w-full border border-gray-700 py-2 rounded-md text-white font-semibold mb-4 flex gap-2 items-center justify-center bg-slate-900 cursor-pointer"
+          className="w-full border border-gray-700 py-2 mt-3 mb-2 rounded-md text-white font-semibold  flex gap-2 items-center justify-center bg-slate-900 cursor-pointer"
         >
           <FcGoogle size={25} /> Continue with Google
         </button>

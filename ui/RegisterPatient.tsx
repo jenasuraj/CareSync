@@ -5,7 +5,7 @@ import { HiArrowTopRightOnSquare } from "react-icons/hi2";
 const RegisterPatient = () => {
   return (
     <div className='w-full h-auto flex items-center justify-center p-3 flex-col mt-7'>
-        <form className='rounded-lg min-h-[50vh]  gap-3 w-1/2 p-4 flex flex-col items-center justify-center  border border-gray-300 shadow-sm'>
+        <form className='rounded-lg min-h-[50vh] w-full gap-3 md:w-2/3 p-4 flex flex-col items-center justify-center  border border-gray-300 shadow-sm'>
                <h1 className='w-full flex items-center gap-2 justify-center text-2xl mb-5'>Patient Registration <FcMindMap size={25}/></h1>
                <input type="text" name='name'placeholder='Enter Your Name' className='p-2 w-full border border-gray-300 rounded-md'/>
                <input type="text" name='email' placeholder='Enter Your Email' className='p-2 w-full border border-gray-300 rounded-md'/>

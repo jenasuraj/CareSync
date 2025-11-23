@@ -4,11 +4,18 @@ import { useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { CldUploadWidget } from "next-cloudinary";
 import { doctor_departments,other_departments } from "@/data/Doctor";
-import { Dispatch, SetStateAction } from "react";
+import Input from "@/components/Input";
+import Button from "@/components/Button";
+import { MdOutlineSubdirectoryArrowLeft } from "react-icons/md";
 
+interface propTypes{ 
+  currentPage: string, 
+  setMessage: React.Dispatch<React.SetStateAction<string>>,  
+  setLoading:React.Dispatch<React.SetStateAction<boolean>>,
+  setPageRefreshed:React.Dispatch<React.SetStateAction<boolean>>  
+}
 
-
-const AddEmployee = ({ currentPage,setMessage }: { currentPage: string, setMessage: Dispatch<SetStateAction<string>>; }) => {
+const AddEmployee = ({ currentPage,setMessage,setLoading, setPageRefreshed}:propTypes) => {
   const [formData, setFormData] = useState({
     name: "",
     ph_no: "",
@@ -18,7 +25,6 @@ const AddEmployee = ({ currentPage,setMessage }: { currentPage: string, setMessa
     file: "",
   });
 
-  
 useEffect(() => {
   const timer = setTimeout(() => {
     setFormData({
@@ -33,8 +39,7 @@ useEffect(() => {
   return () => clearTimeout(timer);
 }, [currentPage]);
 
-
-  const departments =
+const departments =
     currentPage.toLowerCase() === "doctors"
       ? doctor_departments
       : other_departments;
@@ -56,13 +61,16 @@ useEffect(() => {
       return
       }   
     try{
+      setLoading(true)
       const response = await axios.post('/api/dashboard/admin/crud_employees',{formData,currentPage})
+      setPageRefreshed(true)
       setMessage(response?.data?.message)
       }
       catch (err) {
-  const error = err as AxiosError<{ message: string }>;
-  setMessage(error.response?.data?.message || "Something went wrong");
-}
+      const error = err as AxiosError<{ message: string }>;
+      setMessage(error.response?.data?.message || "Something went wrong");
+    }
+    setLoading(false)
     setFormData({
       name: "",
       ph_no: "",
@@ -73,42 +81,20 @@ useEffect(() => {
     });
   };
 
-
   return (
     <>
     <form
       onSubmit={handleSubmit}
-      className="max-w-full h-[7vh] gap-2 flex justify-between">
-      <input
-        name="name"
-        type="text"
-        placeholder="Enter Name"
-        value={formData.name}
-        onChange={handleChange}
-        className="border border-gray-300 shadow-sm rounded-sm px-2 py-1 w-1/7"/>
-
-      <input
-        name="ph_no"
-        type="number"
-        placeholder="Enter PH.no"
-        value={formData.ph_no}
-        onChange={handleChange}
-        className="border border-gray-300 shadow-sm rounded-sm px-2 py-1 w-1/7"/>
-
-      <input
-        name="email"
-        type="text"
-        placeholder="Enter Email"
-        value={formData.email}
-        onChange={handleChange}
-        className="border border-gray-300 shadow-sm rounded-sm px-2 py-1 w-1/7"/>
-
+      className="flex flex-col w-full md:flex-row gap-2 md:justify-between">
+      <Input placeholder="Enter Name" size="auto" style="outline" valueData={formData.name} handleChange={handleChange} type="text" name="name"/>  
+      <Input placeholder="Enter Phone"size="auto" style="outline" valueData={formData.ph_no} handleChange={handleChange} type="number" name="ph_no"/> 
+      <Input placeholder="Enter Email"size="auto" style="outline" valueData={formData.email} handleChange={handleChange} type="text" name="email"/> 
       {(currentPage === "Doctors" || currentPage === "Others") && (
           <select
             name="department"
             value={formData.department}
             onChange={handleChange}
-            className="border border-gray-300 shadow-sm rounded-sm px-2 py-1 w-1/7"
+            className="border border-gray-300 shadow-sm rounded-sm px-2 py-1 w-full md:w-1/7"
           >
             <option value="" disabled>
               Enter Department
@@ -120,15 +106,7 @@ useEffect(() => {
             ))}
           </select>
         )}
-
-      <input
-        name="experience"
-        type="number"
-        placeholder="Enter Experience"
-        value={formData.experience}
-        onChange={handleChange}
-        className="border border-gray-300 shadow-sm rounded-sm px-2 py-1 w-1/7"/>
-
+      <Input placeholder="Enter your Experience" size="auto" style="outline" valueData={formData.experience} handleChange={handleChange} type="number" name="experience"/> 
       <CldUploadWidget
               uploadPreset="jensen"
               onSuccess={(result) => {
@@ -142,7 +120,7 @@ useEffect(() => {
             >
               {({ open }) => (
                 <button
-                  className=" bg-blue-900 text-white py-2 px-4 rounded-sm  transition-all"
+                  className="bg-gradient-to-r from-blue-900 to-indigo-800 text-white py-2 px-4 rounded-sm  transition-all w-full md:w-1/7"
                   onClick={() => open()}
                   type="button"
                 >
@@ -150,12 +128,9 @@ useEffect(() => {
                 </button>
               )}
       </CldUploadWidget>
-
-      <button
-        type="submit"
-        className="border border-gray-300 bg-blue-900 text-white shadow-sm rounded-sm px-2 py-1 w-1/7">
-        ADD
-      </button>
+    <Button style="primary" size="auto">
+      <MdOutlineSubdirectoryArrowLeft size={20} color="white"/>
+    </Button>
     </form>
     </>
   );

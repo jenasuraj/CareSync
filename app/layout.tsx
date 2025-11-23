@@ -1,29 +1,24 @@
-import type { Metadata } from "next";
 import "./globals.css";
-import Footer from "@/ui/Footer";
-import Navbar from "@/ui/Navbar";
-//import { AuthProvider } from "@/context/AuthContext"; // ✅ import your provider
-import { Poppins } from "next/font/google";
+import Footer from "@/ui/footer/Footer";
+import Navbar from "@/ui/navbar/Navbar";
+import {Roboto}  from "next/font/google";
+import Provider from "@/wrappers/Provider";
 
-
-const poppins = Poppins({
+const poppins = Roboto({
   subsets: ["latin"],
   weight: ["400", "600", "700"], // multiple weights
 });
 
 
-export const metadata: Metadata = {
-  title: "Medicure.Ai",
-  description: "Acess the modern hospital management system",
-};
-
 export default function RootLayout({children,}: Readonly<{children: React.ReactNode;}>) {
   return (
     <html lang="en">
       <body className={`${poppins.className}`}>
-            <Navbar />
-          <main className={`w-full min-h-screen bg-black`}>{children}</main>
+          <Provider>
+          <Navbar />
+          <main className={`w-full min-h-screen bg-gradient-to-t from-violet-700 to-indigo-800`}>{children}</main>
           <Footer />
+          </Provider>
       </body>
     </html>
   );

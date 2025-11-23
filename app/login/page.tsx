@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import LoginPage from "@/ui/LoginPage";
+import LoginPage from "@/ui/loginpage/LoginPage";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {

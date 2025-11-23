@@ -2,10 +2,18 @@ import homeImg from "@/public/home-img.jpg";
 import Image from "next/image";
 import Link from "next/link";
 import React from 'react'
+import Button from "@/components/Button";
+import { Metadata } from "next";
+import { RxDashboard } from "react-icons/rx";
 
+
+export const metadata: Metadata = {
+  title: "CareSync.io | Home",
+  description: "Manage patients, doctors, appointments, and your healthcare system seamlessly.",
+  keywords: ["hospital", "health", "management", "patients", "appointments"],
+};
 
 const HomePage = () => {   
-
 return (
 <>
       <section className="relative w-full min-h-screen flex items-center justify-center text-white overflow-hidden">
@@ -22,19 +30,17 @@ return (
           </h1>
 
           <p className="text-md sm:text-base md:text-lg text-gray-300 max-w-3xl">
-            Welcome to our Hospital Management System — a modern platform
+            Welcome to CareSync — a modern platform
             designed to simplify healthcare operations. Manage patients, doctors,
             appointments, and payments seamlessly in one secure dashboard.
             Empowering hospitals with efficiency, accuracy, and better patient care
             through technology.
           </p>
 
-          <Link
-            href="/login"
-            className="mt-4 py-3 px-8 sm:px-10 border border-gray-300 rounded-full 
-            text-white bg-white/20 backdrop-blur-md "
-          >
-            Access to Dashboard
+          <Link href="/login" >
+             <Button size="auto" style="primary">
+              Access to Dashboard <RxDashboard size={20}/>
+             </Button>
           </Link>
         </header>
       </section>
