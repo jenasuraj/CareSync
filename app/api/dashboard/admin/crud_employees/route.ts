@@ -1,5 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { neon } from "@neondatabase/serverless";
+import { Target } from "lucide-react";
 
 export async function DELETE(req: NextRequest) {
     const sql = neon(process.env.POSTGRES_URL!);
@@ -136,81 +137,249 @@ else { // others
 
 }
 
-export async function POST(req:NextRequest) {
-    const body = await req.json()
-    const experience: string = body?.formData?.experience
-    const parsedExperience: number = Number(experience) 
-    const sql = neon(process.env.POSTGRES_URL!);
+export async function POST(req: NextRequest) {
+  const body = await req.json();
+  const sql = neon(process.env.POSTGRES_URL!);
 
-    try{
-      if(body?.currentPage == "Doctors")
-    {    
-    const isUserExists = await sql`SELECT * FROM doctors WHERE email =${body?.formData?.email} OR phone = ${body?.formData?.ph_no}`;
-    if(isUserExists.length>0){
-     return NextResponse.json({message:"The Email/Phone is already taken",success:false},{status:404})
+  const {
+    currentPage,
+    updateBTN,
+    formData: {
+      name,
+      email,
+      ph_no,
+      department,
+      file,
+      experience
     }
-    const response = await sql`
-      INSERT INTO doctors (name, email, phone,department,image,experience)
-      VALUES (${body?.formData.name}, ${body?.formData.email}, ${body?.formData?.ph_no},${body?.formData?.department},${body?.formData?.file},${parsedExperience})
-      RETURNING *;`;
-    return NextResponse.json({ success: true, message: "Doctor registered successfully",data:response[0]},{status:200});
+  } = body;
+
+  const parsedExperience = Number(experience);
+
+  try {
+    // --------------------------------------
+    // 1. DOCTORS
+    // --------------------------------------
+    if (currentPage === "Doctors") {
+      if (updateBTN !== 0) {
+        const updation = await sql`
+          UPDATE doctors 
+          SET 
+            name = ${name},
+            email = ${email},
+            phone = ${ph_no},
+            department = ${department},
+            image = ${file},
+            experience = ${parsedExperience}
+          WHERE id = ${updateBTN}
+          RETURNING *;
+        `;
+        return NextResponse.json(
+          { success: true, message: "Doctor updated", data: updation[0] },
+          { status: 200 }
+        );
+      }
+
+      // INSERT
+      const isUserExists = await sql`
+        SELECT * FROM doctors 
+        WHERE email = ${email} OR phone = ${ph_no};
+      `;
+
+      if (isUserExists.length > 0) {
+        return NextResponse.json(
+          { success: false, message: "The Email/Phone is already taken" },
+          { status: 409 }
+        );
+      }
+
+      const inserted = await sql`
+        INSERT INTO doctors (name, email, phone, department, image, experience)
+        VALUES (${name}, ${email}, ${ph_no}, ${department}, ${file}, ${parsedExperience})
+        RETURNING *;
+      `;
+
+      return NextResponse.json(
+        { success: true, message: "Doctor registered successfully", data: inserted[0] },
+        { status: 201 }
+      );
     }
 
-    else if(body?.currentPage == "Others")
-    {  
-    const isUserExists = await sql`SELECT * FROM others WHERE email =${body?.formData?.email} OR phone = ${body?.formData?.ph_no}`;
-    if(isUserExists.length>0){
-     return NextResponse.json({message:"The Email/phone is already taken",success:false},{status:404})
-    }
-    const response = await sql`
-      INSERT INTO others (name, email, phone,department,image,experience)
-      VALUES (${body?.formData.name}, ${body?.formData.email}, ${body?.formData?.ph_no},${body?.formData?.department},${body?.formData?.file},${parsedExperience})
-      RETURNING *;`;
-    return NextResponse.json({ success: true, message: `${body?.formData?.department} registered successfully`,data:response[0]},{status:201});
+    // --------------------------------------
+    // 2. OTHERS
+    // --------------------------------------
+    if (currentPage === "Others") {
+      if (updateBTN !== 0) {
+        const updation = await sql`
+          UPDATE others
+          SET 
+            name = ${name},
+            email = ${email},
+            phone = ${ph_no},
+            department = ${department},
+            image = ${file},
+            experience = ${parsedExperience}
+          WHERE id = ${updateBTN}
+          RETURNING *;
+        `;
+        return NextResponse.json(
+          { success: true, message: "Others updated", data: updation[0] },
+          { status: 200 }
+        );
+      }
+
+      // INSERT
+      const isUserExists = await sql`
+        SELECT * FROM others 
+        WHERE email = ${email} OR phone = ${ph_no};
+      `;
+
+      if (isUserExists.length > 0) {
+        return NextResponse.json(
+          { success: false, message: "The Email/phone is already taken" },
+          { status: 409 }
+        );
+      }
+
+      const inserted = await sql`
+        INSERT INTO others
+        (name, email, phone, department, image, experience)
+        VALUES (${name}, ${email}, ${ph_no}, ${department}, ${file}, ${parsedExperience})
+        RETURNING *;
+      `;
+
+      return NextResponse.json(
+        {
+          success: true,
+          message: `${department} registered successfully`,
+          data: inserted[0]
+        },
+        { status: 201 }
+      );
     }
 
-    else if(body?.currentPage == "Pharmacists")
-    {
-    console.log("i am in pharma post section...")    
-    const isUserExists = await sql`SELECT * FROM pharmacists WHERE email =${body?.formData?.email} OR phone = ${body?.formData?.ph_no}`;
-    if(isUserExists.length>0){
-     return NextResponse.json({message:"The email/phone is already taken",success:false},{status:404})
+    // --------------------------------------
+    // 3. PHARMACISTS
+    // --------------------------------------
+    if (currentPage === "Pharmacists") {
+      if (updateBTN !== 0) {
+        const updation = await sql`
+          UPDATE pharmacists
+          SET 
+            name = ${name},
+            email = ${email},
+            phone = ${ph_no},
+            image = ${file},
+            experience = ${parsedExperience}
+          WHERE id = ${updateBTN}
+          RETURNING *;
+        `;
+        return NextResponse.json(
+          { success: true, message: "Pharmacist updated", data: updation[0] },
+          { status: 200 }
+        );
+      }
+
+      // INSERT
+      const isUserExists = await sql`
+        SELECT * FROM pharmacists 
+        WHERE email = ${email} OR phone = ${ph_no};
+      `;
+
+      if (isUserExists.length > 0) {
+        return NextResponse.json(
+          { success: false, message: "The Email/phone is already taken" },
+          { status: 409 }
+        );
+      }
+
+      const inserted = await sql`
+        INSERT INTO pharmacists (name, email, phone, image, experience)
+        VALUES (${name}, ${email}, ${ph_no}, ${file}, ${parsedExperience})
+        RETURNING *;
+      `;
+
+      return NextResponse.json(
+        { success: true, message: "Pharmacist registered successfully", data: inserted[0] },
+        { status: 201 }
+      );
     }
-    const response = await sql`
-      INSERT INTO pharmacists (name, email, phone,image,experience)
-      VALUES (${body?.formData.name}, ${body?.formData.email}, ${body?.formData?.ph_no},${body?.formData?.file},${parsedExperience})
-      RETURNING *;`;
-    return NextResponse.json({ success: true, message: `pharmacists registered successfully`,data:response[0]},{status:201});
+
+    // --------------------------------------
+    // 4. NURSES
+    // --------------------------------------
+    if (currentPage === "Nurses") {
+      if (updateBTN !== 0) {
+        const updation = await sql`
+          UPDATE nurses
+          SET 
+            name = ${name},
+            email = ${email},
+            phone = ${ph_no},
+            image = ${file},
+            experience = ${parsedExperience}
+          WHERE id = ${updateBTN}
+          RETURNING *;
+        `;
+        return NextResponse.json(
+          { success: true, message: "Nurse updated", data: updation[0] },
+          { status: 200 }
+        );
+      }
+
+      // INSERT
+      const isUserExists = await sql`
+        SELECT * FROM nurses 
+        WHERE email = ${email} OR phone = ${ph_no};
+      `;
+
+      if (isUserExists.length > 0) {
+        return NextResponse.json(
+          { success: false, message: "The Email/phone is already taken" },
+          { status: 409 }
+        );
+      }
+
+      const inserted = await sql`
+        INSERT INTO nurses (name, email, phone, image, experience)
+        VALUES (${name}, ${email}, ${ph_no}, ${file}, ${parsedExperience})
+        RETURNING *;
+      `;
+
+      return NextResponse.json(
+        { success: true, message: "Nurse registered successfully", data: inserted[0] },
+        { status: 201 }
+      );
     }
-    else if(body?.currentPage == "Nurses")
-    {
-    console.log("i am in nurse post section...")    
-    const isUserExists = await sql`SELECT * FROM nurses WHERE email =${body?.formData?.email} OR phone = ${body?.formData?.ph_no}`;
-    if(isUserExists.length>0){
-     return NextResponse.json({message:"The Email/phone is already taken",success:false},{status:409})
-    }
-    const response = await sql`
-      INSERT INTO nurses (name, email, phone,image,experience)
-      VALUES (${body?.formData.name}, ${body?.formData.email}, ${body?.formData?.ph_no},${body?.formData?.file},${parsedExperience})
-      RETURNING *;`;
-    return NextResponse.json({ success: true, message: `Nurse registered successfully`,data:response[0]},{status:201});
-    }
-    }
-    catch(err){
-      console.log(err)
-      return NextResponse.json({ success: false, message: `Server Error`,data:err},{status:500});
-    }
-} 
+
+    // fallback
+    return NextResponse.json(
+      { success: false, message: "Invalid page type" },
+      { status: 400 }
+    );
+
+  } catch (err) {
+    console.log(err);
+    return NextResponse.json(
+      { success: false, message: "Server Error", data: err },
+      { status: 500 }
+    );
+  }
+}
+
+
 
 export async function PUT(req:NextRequest) {
-    console.log("hello i am here !")
  const body = await req.json()
- console.log("id",body?.id) 
  const sql = neon(process.env.POSTGRES_URL!);
+ console.log(body.target,body.id)
  if(body?.id && body?.target == 'inactive'){
- const response = await sql`UPDATE doctors SET status = 'inactive' WHERE id = ${body?.id}`
+ const response = await sql`UPDATE doctors SET status = 'inactive' WHERE id = ${Number(body?.id)}`
  return NextResponse.json({ success: true, message: `updated successfully`,data:response[0]},{status:201});
  }
- const response = await sql`UPDATE doctors SET status = 'active' WHERE id = ${body?.id}`
+ else if(body?.target == 'active'){
+ const response = await sql`UPDATE doctors SET status = 'active' WHERE id = ${Number(body?.id)} RETURNING *`
  return NextResponse.json({ success: true, message: `updated successfully`,data:response[0]},{status:201});
+ }
+
 }

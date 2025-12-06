@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React from 'react';
 import { admin_employees_items } from '@/data/Doctor';
@@ -13,17 +13,29 @@ import axios from 'axios';
 
 
 const Page = () => {
+const emptyEmployee: Employee = {
+  id: 0,
+  name: "",
+  phone: "",
+  email: "",
+  department: "",
+  experience: "",
+  image: "",
+  status:""
+};  
 const [currentPage,setCurrentPage] = useState('Doctors')    
 const [items, setItems] = useState<Employee[]>([]);
 const {message,setMessage,setLoading,loading} = useAuth()
 const [pageRefreshed,setPageRefreshed] = useState(false)
 const [employeeName,setEmployeeName] = useState('')
 const [buttonTriggered, setButtonTriggered] = useState(false)
+const [updateTriggered,setUpdateTriggered] = useState<Employee>()
 
 useEffect(() => {
     const fetchData = async () => {
       console.log("db call is made to fetch data...");
       try {
+        setUpdateTriggered(emptyEmployee)
         setLoading(true);
         const response = await axios.get("/api/dashboard/admin/crud_employees", {
           params: { currentPage, employeeName },
@@ -56,9 +68,9 @@ return (
     )
   })}
 </div>
-  <AddEmployee currentPage = {currentPage} setMessage = {setMessage} setLoading={setLoading} setPageRefreshed={setPageRefreshed}/>
+  <AddEmployee currentPage = {currentPage} setMessage = {setMessage} setLoading={setLoading} setPageRefreshed={setPageRefreshed} updateTriggered={updateTriggered}/>
   <FindEmployee currentPage = {currentPage} setMessage = {setMessage} setEmployeeName={setEmployeeName} employeeName={employeeName} buttonTriggered={buttonTriggered} setButtonTriggered={setButtonTriggered}/>
-  <ShowEmployee currentPage = {currentPage} loading={loading} items={items}  message={message} setMessage = {setMessage} setLoading={setLoading} setPageRefreshed={setPageRefreshed}/>
+  <ShowEmployee currentPage = {currentPage} loading={loading} items={items}  message={message} setMessage = {setMessage} setLoading={setLoading} setPageRefreshed={setPageRefreshed} setUpdateTriggered={setUpdateTriggered}/>
 </section>
   )
 }

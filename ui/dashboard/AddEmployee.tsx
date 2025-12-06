@@ -7,15 +7,17 @@ import { doctor_departments,other_departments } from "@/data/Doctor";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import { MdOutlineSubdirectoryArrowLeft } from "react-icons/md";
+import { Employee } from "@/types/Employee";
 
 interface propTypes{ 
   currentPage: string, 
   setMessage: React.Dispatch<React.SetStateAction<string>>,  
   setLoading:React.Dispatch<React.SetStateAction<boolean>>,
-  setPageRefreshed:React.Dispatch<React.SetStateAction<boolean>>  
+  setPageRefreshed:React.Dispatch<React.SetStateAction<boolean>>,
+  updateTriggered:Employee
 }
 
-const AddEmployee = ({ currentPage,setMessage,setLoading, setPageRefreshed}:propTypes) => {
+const AddEmployee = ({ currentPage,setMessage,setLoading, setPageRefreshed,updateTriggered}:propTypes) => {
   const [formData, setFormData] = useState({
     name: "",
     ph_no: "",
@@ -24,6 +26,20 @@ const AddEmployee = ({ currentPage,setMessage,setLoading, setPageRefreshed}:prop
     experience: "",
     file: "",
   });
+
+useEffect(()=>{
+  if(updateTriggered){
+    console.log("ans is",updateTriggered)
+    setFormData({
+      name:updateTriggered.name,
+      ph_no:updateTriggered.phone,
+      email:updateTriggered.email,
+      department:updateTriggered.department,
+      experience:updateTriggered.experience,
+      file:updateTriggered.image
+    })
+  }
+},[updateTriggered])
 
 useEffect(() => {
   const timer = setTimeout(() => {
@@ -62,7 +78,7 @@ const departments =
       }   
     try{
       setLoading(true)
-      const response = await axios.post('/api/dashboard/admin/crud_employees',{formData,currentPage})
+      const response = await axios.post('/api/dashboard/admin/crud_employees',{formData,currentPage,updateBTN:updateTriggered?.id})
       setPageRefreshed(true)
       setMessage(response?.data?.message)
       }

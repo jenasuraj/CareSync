@@ -14,7 +14,6 @@ export const metadata: Metadata = {
 
 
 const page = () => {
-  console.log("hi i am in server")
 return (
 <>
 <section className='min-h-screen w-full text-gray-700 flex p-2 flex-col gap-5'>

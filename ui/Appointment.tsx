@@ -9,6 +9,7 @@ import { appointmentFormdata,doctorProperty } from "@/types/Employee";
 import img from '@/public/dashboard-img.jpg'
 import ImageLayout from "./ImageLayout";
 
+
 const Appointment = () => {
   const currentDate = new Date();
   const year = currentDate.getFullYear();
@@ -30,7 +31,6 @@ const Appointment = () => {
     type: "",
   });
 
-  console.log("date is",date)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
