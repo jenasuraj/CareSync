@@ -105,7 +105,7 @@ export const dashboard_items = [
   },
   {
     id: 6,
-    name: "Transection",
+    name: "Transaction",
     icon:<RiMoneyRupeeCircleLine size={20}/>,
     back:<GoChevronRight size={20}/>,
     genre:'admin',

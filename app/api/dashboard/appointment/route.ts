@@ -5,36 +5,29 @@ export async function POST(req: NextRequest) {
   try {
     const sql = neon(process.env.POSTGRES_URL!);
     const body = await req.json();
-    const { name, phone, date, address, doctorId, p_id, symptoms } = body;
-    console.log("in server",name,phone,date,address,doctorId,p_id,symptoms)
-    if(!name || !phone || !date || !address || !doctorId ||symptoms.length == 0 ){
+    const { mode, date, d_id, p_id } = body;
+    const appointment_amount:number = 200
+    console.log("in server",date,d_id,mode,p_id)
+    if(!p_id || !date || !mode || !d_id){
       return NextResponse.json(
       {
         message: "Server error missing details.",
         success: false,
       },
-      { status: 400 }
+      { status: 404 }
     );
     }
-    else{
-    const money_type:string = "appointment"
-    const money: number = 200
-  await sql`INSERT INTO amount(money_type,amount) VALUES(${money_type},${money})`    
-  const formattedSymptoms = `{${symptoms.join(',')}}`; // → "{fever}" or "{fever,cold}"
-  await sql`
-    INSERT INTO appointments (name, phone, date, address, d_id, p_id, symptoms)
-    VALUES (${name}, ${phone}, ${date}, ${address}, ${doctorId}, ${p_id}, ${formattedSymptoms});
-  `;
-    return NextResponse.json(
+    const response = await sql `INSERT INTO appointments (d_id,p_id,date) VALUES (${d_id},${p_id},${date})`
+    const response2 = await sql `INSERT INTO transactions (p_id,type,amount) VALUES (${p_id},${mode},${appointment_amount})` 
+        return NextResponse.json(
       {
-        message: "Appointment booked successfully.",
+        message: "Appointment booked ",
         success: true,
       },
-      { status: 201 }
+      { status: 200 }
     );
-    }
-
-  } catch (error) {
+  }
+ catch (error) {
     console.error("Error booking appointment:", error);
     return NextResponse.json(
       {
@@ -53,14 +46,15 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const currentDate = searchParams.get("date");
     const appointment = searchParams.get("appointment");
-    console.log("appointment is",appointment)
-    if(appointment){
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth() + 1; // Add 1 for human-readable month
-    const day = currentDate.getDate();
-    const today = `${year}-${month}-${day}`       
-     const response = await sql`SELECT name,phone FROM appointments WHERE d_id = ${appointment} AND date = ${today}`
+    console.log("doctor id is",appointment)
+    if(appointment){      
+    const response = await sql`
+      SELECT patients.name, patients.phone
+      FROM appointments
+      JOIN patients ON appointments.p_id = patients.id
+      WHERE appointments.d_id = ${appointment}
+        AND appointments.date = CURRENT_DATE`;
+    console.log(response)                            
      if(response.length == 0){
       return NextResponse.json(
         { message: "No appointments present for today", success: true },
@@ -83,6 +77,7 @@ export async function GET(req: NextRequest) {
       SELECT doctors.id,
              doctors.name,
              doctors.department,
+             doctors.phone,
              doctors.image,
              doctors.experience,
              COALESCE(appt_count.total_appointments, 0) AS total_appointments

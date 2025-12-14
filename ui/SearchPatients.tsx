@@ -4,6 +4,8 @@ import React, { useRef, useState, useEffect } from "react";
 import { CiSearch } from "react-icons/ci";
 import axios from "axios";
 import { useAuth } from "@/context/AppContext";
+import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
 
 interface patientData {
   id: number;
@@ -15,11 +17,11 @@ interface patientData {
 }
 
 const SearchPatients = () => {
+  const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-
   const [patients, setPatients] = useState<patientData[]>([]);
-  const { setMessage, setLoading } = useAuth();
+  const { setMessage, setLoading, loading } = useAuth();
 
   /* ----------------------------------
      CLOSE DROPDOWN ON OUTSIDE CLICK
@@ -62,7 +64,8 @@ const SearchPatients = () => {
       if (response?.data?.data) {
         setPatients(response.data.data);
       }
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as AxiosError<{ message: string }>;
       if (error?.response?.status === 404) {
         setMessage("Patient not exists!");
       } else {
@@ -136,7 +139,7 @@ const SearchPatients = () => {
                 Admit
               </span>
 
-              <span className="text-white bg-green-500 text-center rounded-sm py-1 hover:bg-green-700">
+              <span className="text-white bg-green-500 text-center rounded-sm py-1 hover:bg-green-700" onClick={()=>router.push(`/dashboard/admin/appointments?id=${patient.id}`)}>
                 Appoint
               </span>
 
