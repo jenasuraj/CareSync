@@ -104,16 +104,8 @@ export const dashboard_items = [
     path:'/patients'
   },
   {
-    id: 4,
-    name: "Appointments",
-    icon:<FaMobileAlt  size={20}/>,
-    back:<GoChevronRight size={20}/>,
-    genre:'admin',
-    path:'/appointments'
-  },
-  {
     id: 6,
-    name: "Charges",
+    name: "Transection",
     icon:<RiMoneyRupeeCircleLine size={20}/>,
     back:<GoChevronRight size={20}/>,
     genre:'admin',
