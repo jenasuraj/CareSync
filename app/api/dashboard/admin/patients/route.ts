@@ -6,27 +6,56 @@ export async function GET(req: NextRequest) {
   try {
     const sql = neon(process.env.POSTGRES_URL!);
     const { searchParams } = new URL(req.url);
-    let name: string | null = searchParams.get("name");
-    if(name){
-      name = name.toLowerCase() + '%'
-      console.log("in server",name)
-      const response = await sql `SELECT * FROM patients WHERE Lower(name) LIKE ${name}`
+    const name = searchParams.get("name");
+    const id = searchParams.get("id")
+    console.log("id is",)
+    if(id){
+      console.log("called ...")
+      const response = await sql`SELECT * FROM patients WHERE id = ${id}`;
       console.log("response is",response)
-      if(response.length>0){
-        return NextResponse.json({message:"all patients are here",data:response,success:true},{status:200})
-      }
-      else{
-        return NextResponse.json({message:"No any patient is here with this name",success:false},{status:404})
-      }
+      return NextResponse.json(
+        { message: "Patient is provided", data: response, success: true },
+        { status: 200 }
+      );
     }
-  } catch (error) {
-    console.log(error)
+
+    // 🔹 CASE 1: Fetch all patients (page load)
+    if (!name) {
+      const response = await sql`SELECT * FROM patients ORDER BY id DESC`;
+      return NextResponse.json(
+        { message: "All patients", data: response, success: true },
+        { status: 200 }
+      );
+    }
+
+    // 🔹 CASE 2: Search by name
+    const search = name.toLowerCase() + "%";
+    const response = await sql`
+      SELECT * FROM patients
+      WHERE LOWER(name) LIKE ${search}
+    `;
+
+    if (response.length > 0) {
+      return NextResponse.json(
+        { message: "Patients found", data: response, success: true },
+        { status: 200 }
+      );
+    }
+
     return NextResponse.json(
-      { message: "server error", success: false, error },
+      { message: "No patient found", success: false },
+      { status: 404 }
+    );
+
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { message: "Server error", success: false },
       { status: 500 }
     );
   }
 }
+
 
 
 export async function POST(req: NextRequest) {

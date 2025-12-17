@@ -82,7 +82,7 @@ const Appointment = () => {
     try{
       const response = await axios.post('/api/dashboard/appointment',{date:date,d_id:bookDoctorDetails.id,p_id:p_id,mode})
       setMessage("Appointment Booked !")
-      router.push("/dashboard/admin/patients")
+      setShowModal(false)
     }
     catch (err) {
        const error = err as AxiosError<{ message: string }>;

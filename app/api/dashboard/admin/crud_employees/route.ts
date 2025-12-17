@@ -367,8 +367,6 @@ export async function POST(req: NextRequest) {
   }
 }
 
-
-
 export async function PUT(req:NextRequest) {
  const body = await req.json()
  const sql = neon(process.env.POSTGRES_URL!);

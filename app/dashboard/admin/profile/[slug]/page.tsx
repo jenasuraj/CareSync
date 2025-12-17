@@ -1,13 +1,11 @@
 import React from 'react'
-
+import PatientProfile from '@/ui/dashboard/PatientProfile'
 
 const page = () => {
   return (
-<>
 <section className='min-h-screen w-full text-black flex items-center justify-center'>
-Main page for admin
+<PatientProfile/>
 </section>
-</>
   )
 }
 

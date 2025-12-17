@@ -53,7 +53,7 @@ const RegisterPatient = () => {
     }     catch(err){
                 const error = err as AxiosError<{ message: string }>;
                 if(error.status == 404){
-                    setMessage("patient ain't axists, open up modal page.")
+                    setMessage("Duplicate data detected")
                 }
                 else{
                     setMessage("Server error")
@@ -66,7 +66,7 @@ const RegisterPatient = () => {
     <div className="w-full flex items-center justify-center p-3 flex-col mt-7">
       <form
         onSubmit={handleSubmit}
-        className="rounded-lg min-h-[50vh] w-full md:w-2/3 p-4 flex flex-col gap-3 items-center justify-center border border-gray-300 shadow-sm"
+        className="rounded-lg min-h-[60vh] w-full md:w-2/3 p-4 flex flex-col gap-3 items-center justify-center border border-gray-300 shadow-sm"
       >
         <h1 className="w-full flex items-center gap-2 justify-center text-2xl mb-5">
           Patient Registration <FcMindMap size={25} />

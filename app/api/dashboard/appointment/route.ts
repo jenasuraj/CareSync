@@ -7,6 +7,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { mode, date, d_id, p_id } = body;
     const appointment_amount:number = 200
+    const money_reason: string = "appointment"
     console.log("in server",date,d_id,mode,p_id)
     if(!p_id || !date || !mode || !d_id){
       return NextResponse.json(
@@ -18,7 +19,7 @@ export async function POST(req: NextRequest) {
     );
     }
     const response = await sql `INSERT INTO appointments (d_id,p_id,date) VALUES (${d_id},${p_id},${date})`
-    const response2 = await sql `INSERT INTO transactions (p_id,type,amount) VALUES (${p_id},${mode},${appointment_amount})` 
+    const response2 = await sql `INSERT INTO transactions (p_id,money_type,reason,amount) VALUES (${p_id},${mode},${money_reason},${appointment_amount})` 
         return NextResponse.json(
       {
         message: "Appointment booked ",

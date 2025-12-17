@@ -20,7 +20,7 @@ const ImageLayout = ({img,children}:imgProps) => {
         className="object-cover absolute inset-0 rounded-lg"
     />
     <div className='w-full h-full bg-black/60 absolute z-10 rounded-lg'></div>
-    <div className='text-center flex flex-col items-center justify-center gap-4 absolute z-20'>
+    <div className='text-center flex flex-col w-full p-10 items-center justify-center gap-4 absolute z-20'>
     {children}
     </div>
 </div>

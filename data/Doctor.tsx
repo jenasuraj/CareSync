@@ -14,7 +14,7 @@ import { FaMobileAlt } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
 import { LuPanelLeftClose } from "react-icons/lu";
 import { RiMoneyRupeeCircleLine } from "react-icons/ri";
-import { AiOutlineMedicineBox } from "react-icons/ai";
+import { RxPerson } from "react-icons/rx";
 import { TbHealthRecognition } from "react-icons/tb";
 import { MdOutlineMessage } from "react-icons/md";
 import { GiHealthNormal } from "react-icons/gi";
@@ -97,21 +97,20 @@ export const dashboard_items = [
   },
   {
     id: 3,
-    name: "patients",
+    name: "Add On",
     icon:<FaPerson  size={20}/>,
     back:<GoChevronRight size={20}/>,
     genre:'admin',
     path:'/patients'
   },
-  {
-    id: 6,
-    name: "Transaction",
-    icon:<RiMoneyRupeeCircleLine size={20}/>,
+    {
+    id: 4,
+    name: "Profile",
+    icon:<RxPerson  size={20}/>,
     back:<GoChevronRight size={20}/>,
     genre:'admin',
-    path:'/charges'
+    path:'/profile'
   },
-  
   {
     id: 8,
     name: "Dashboard",
