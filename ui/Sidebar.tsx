@@ -5,8 +5,7 @@ import {LuPanelRightClose } from "react-icons/lu";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AppContext";
-import { ReactNode } from "react";
-import { useEffect } from "react";
+import { ReactNode,useEffect } from "react";
 
 interface dashboard_items_type{
     id: number,
@@ -26,6 +25,7 @@ const Sidebar = ({ role }: { role: string}) => {
      if(item.id === 13){
       setSidebarOpen(!sidebarOpen)
      }
+    if((pathname.startsWith(`/dashboard/patient${item.path}`) || pathname.startsWith(`/dashboard/admin${item.path}`)) && (item.path != '/')) return
      else{
      setLoading(true)
       router.push(pathname.startsWith('/dashboard/patient') && item.path ? `/dashboard/patient${item.path}`:
