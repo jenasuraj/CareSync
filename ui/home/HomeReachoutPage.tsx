@@ -8,7 +8,7 @@ const HomeReachoutPage = () => {
     <>
       <section className="w-full bg-slate-950 h-screen flex flex-col md:flex-row md:p-10 lg:py-10 lg:px-20">
         {/* Left Section */}
-        <div className="bg-gradient-to-t from-violet-700 to-indigo-800 h-full w-full md:w-1/2 flex justify-center items-center p-6 md:p-10 rounded-none md:rounded-l-4xl">
+        <div className="bg-gradient-to-t from-blue-600 to-indigo-800 h-full w-full md:w-1/2 flex justify-center items-center p-6 md:p-10 rounded-none md:rounded-l-4xl">
           <div className="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-lg p-8 flex flex-col gap-6 border border-white/20">
             <h1 className="text-4xl font-semibold text-white text-center">
               Emergency Message

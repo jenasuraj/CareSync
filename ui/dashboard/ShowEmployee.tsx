@@ -106,7 +106,7 @@ const columns: Column<Employee>[] = [
     label: "Update",
     key: "update",
     render: (row) => (
-      <button onClick={()=>setUpdateTriggered(row)}>
+      <button onClick={()=>setUpdateTriggered(row)} className="cursor-pointer">
         <LiaEditSolid size={22} color="blue" />
       </button>
     ),
@@ -212,7 +212,7 @@ return (
         </Modal>
       )}
 
-      <section className="overflow-x-auto w-auto p-2 ">
+      <section className="overflow-x-auto w-auto p-2 overflow-y-auto h-[40vh]">
         {items.length > 0 ? (
           <Table
             items={items}

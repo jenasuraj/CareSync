@@ -6,16 +6,22 @@ interface AuthContextType {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>
   message:string;
   setMessage: React.Dispatch<React.SetStateAction<string>>
+  loadingText: boolean;
+  setLoadingText:React.Dispatch<React.SetStateAction<boolean>>
+  sidebarOpen:boolean,
+  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [loading, setLoading] = useState(false); // default false
+  const [loading, setLoading] = useState<boolean>(false); // default false
   const [message,setMessage] = useState("")
+  const [loadingText,setLoadingText] = useState<boolean>(false)
+  const [sidebarOpen,setSidebarOpen] = useState<boolean>(false)
 
   return (
-    <AuthContext.Provider value={{ loading, setLoading,message,setMessage }}>
+    <AuthContext.Provider value={{ loading, setLoading,message,setMessage,setLoadingText,loadingText,sidebarOpen,setSidebarOpen }}>
       {children}
     </AuthContext.Provider>
   );

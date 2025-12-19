@@ -1,7 +1,18 @@
+"use client"
+
 import React, { ReactNode } from 'react'
+import { useAuth } from '@/context/AppContext'
 
-const Button = ({children,size,style,extraclass}:{children:ReactNode | string,size: "auto" | "sm" | "lg" ,style:"primary",extraclass?:string}) => {
+interface ButtonParams{
+  children: ReactNode | string,
+  size: "auto" | "sm" | "lg",
+  style:"primary",
+  extraclass?:string,
+  handleClick?:()=>void
+}
 
+const Button = ({children,size,style,extraclass,handleClick}:ButtonParams) => {
+const {loadingText} = useAuth()
 const sizeClasses = {
     auto: "px-4 py-2 h-auto",
     sm: "px-2 py-1 text-sm  h-auto",
@@ -14,8 +25,8 @@ const styleClasses = {
 
 return (
 <>
-    <button type="submit" className={`${sizeClasses[size]} ${extraclass} ${styleClasses[style]} flex items-center gap-2  justify-center   rounded-md text-white font-semibold`}>
-      {children}
+    <button onClick={handleClick} type="submit" className={`${sizeClasses[size]} ${extraclass} ${styleClasses[style]} flex items-center gap-2  justify-center   rounded-md text-white font-semibold`}>
+      {loadingText ? 'Loding...': children}
     </button>
 </>
   )

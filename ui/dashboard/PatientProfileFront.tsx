@@ -40,7 +40,7 @@ const PatientProfileFront = () => {
     { label: "Address", key: "address"},
     {label: "Profile", key:"profile",
       render: (row) => (
-          <button onClick={()=>router.push(`/dashboard/admin/profile/${row.id}`)} className="px-2 py-1 rounded-sm bg-blue-800 text-white">
+          <button onClick={()=>router.push(`/dashboard/admin/profile/${row.id}`)} className="cursor-pointer px-2 py-1 rounded-sm bg-blue-800 text-white">
             Profile
           </button>
         ),}
@@ -92,7 +92,7 @@ const PatientProfileFront = () => {
   }, []);
 
   return (
-    <section className="min-h-screen w-full text-black p-1 flex flex-col">
+    <section className="h-screen w-full text-black p-1 flex flex-col overflow-y-auto">
       <ImageLayout img={img}>
         <p className="text-2xl md:text-3xl text-gray-300 text-center">
           Let the patient access the personalised profile
@@ -115,7 +115,7 @@ const PatientProfileFront = () => {
         </div>
       </ImageLayout>
 
-      <div className="w-full p-1 flex-1 mt-2">
+      <div className="w-full p-2 mt-2 overflow-y-auto h-[40vh]">
         <Table items={patients} columns={columns} />
       </div>
     </section>

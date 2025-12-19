@@ -8,7 +8,7 @@ const HomeAppointmentPage = () => {
       <section className="w-full min-h-screen flex flex-col justify-center items-center bg-slate-950 text-white py-16">
         {/* Header */}
         <header className="mb-12 text-center px-4">
-          <h1 className="text-sky-200 text-4xl md:text-5xl  leading-tight">
+          <h1 className="text-4xl md:text-5xl  leading-tight bg-gradient-to-r from-sky-400 via-sky-50 to-blue-400 text-transparent bg-clip-text font-extrabold">
             Meet our Expert Doctors <br />
             Select appointments with the bests<br/>
             Around the planet

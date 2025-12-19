@@ -14,7 +14,7 @@ interface TableProps<T> {
 export default function Table<T>({ items, columns }: TableProps<T>) {
   console.log("items are ",items,columns)
   return (
-    <table className="w-full table-auto border border-gray-300 divide-y divide-gray-200">
+    <table className="w-full table-auto border border-gray-300 divide-y divide-gray-200 ">
       <thead className="bg-blue-800 text-gray-300">
         <tr>
           {columns.map((col, idx) => (
@@ -30,7 +30,7 @@ export default function Table<T>({ items, columns }: TableProps<T>) {
 
       <tbody className="bg-white divide-y divide-gray-200">
         {items.map((row, rowIndex) => (
-          <tr key={rowIndex} className="hover:bg-gray-50 transition cursor-pointer">
+          <tr key={rowIndex} className="hover:bg-gray-50 transition">
             {columns.map((col, colIndex) => (
               <td key={colIndex} className="px-4 py-2">
                 {col.render ? col.render(row, rowIndex) : (row as any)[col.key]}

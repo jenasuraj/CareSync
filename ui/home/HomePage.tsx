@@ -1,10 +1,8 @@
 import homeImg from "@/public/home-img.jpg";
 import Image from "next/image";
-import Link from "next/link";
 import React from 'react'
-import Button from "@/components/Button";
 import { Metadata } from "next";
-import { RxDashboard } from "react-icons/rx";
+import ButtonToLogin from "./ButtonToLogin";
 
 
 export const metadata: Metadata = {
@@ -13,7 +11,8 @@ export const metadata: Metadata = {
   keywords: ["hospital", "health", "management", "patients", "appointments"],
 };
 
-const HomePage = () => {   
+const HomePage = () => {  
+
 return (
 <>
       <section className="relative w-full min-h-screen flex items-center justify-center text-white overflow-hidden">
@@ -25,7 +24,7 @@ return (
           className="object-cover absolute inset-0"
         />
         <header className="relative z-10 flex flex-col items-center justify-center text-center px-4 md:px-10 gap-6 md:gap-8">
-          <h1 className="text-5xl sm:text-5xl md:text-6xl lg:text-7xl  leading-tight ">
+          <h1 className="text-5xl sm:text-5xl md:text-6xl lg:text-7xl  leading-tight bg-gradient-to-r from-sky-400 via-gray-100 to-blue-400 text-transparent bg-clip-text font-extrabold">
             Your health is in <br /> Good hands
           </h1>
 
@@ -37,11 +36,7 @@ return (
             through technology.
           </p>
 
-          <Link href="/login" >
-             <Button size="auto" style="primary">
-              Access to Dashboard <RxDashboard size={20}/>
-             </Button>
-          </Link>
+        <ButtonToLogin/>
         </header>
       </section>
 </>

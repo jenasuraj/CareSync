@@ -17,6 +17,7 @@ const LoginPage = () => {
   const [formData,setFormData] = useState({email:'',name:'',password:'',hospital_id:'',hospital_password:''}); 
   const [patientPortal,setPatientPortal] = useState(true);
   const errorMsg = searchParams.get("error");
+  const [localLoading,setLocalLoading] = useState<boolean>(false)
 
   useEffect(()=>{
   if(errorMsg == "use-local-account"){
@@ -41,6 +42,7 @@ const LoginPage = () => {
 
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLocalLoading(true)
     if (isLogin && patientPortal) {
       if(!formData.email || !formData.password) return;
       try {
@@ -81,6 +83,7 @@ const LoginPage = () => {
   setMessage(error.response?.data?.message || "Something went wrong");
 }
     }
+    setLocalLoading(false)
   };
 
 
@@ -120,7 +123,12 @@ const LoginPage = () => {
         </>
       )}
       <Button size="lg" style="primary">
+        {localLoading ? ('Assisting...'):(
+          <>
           {!patientPortal ? "Access" : isLogin && patientPortal ? "Login": !isLogin && patientPortal ? 'Register': ''}
+        </>
+        )}   
+        
       </Button>
       <GoogleLogin patientPortal = {patientPortal}/>
 

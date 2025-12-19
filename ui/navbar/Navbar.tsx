@@ -7,8 +7,8 @@ import { BiMenu, BiX } from "react-icons/bi";
 import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { IoLogoFirefox } from "react-icons/io5";
-import { FaUser } from "react-icons/fa6";
 import Modal from "./Modal";
+import { useAuth } from "@/context/AppContext";
 
 
 const Navbar = () => {
@@ -16,7 +16,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDashboard,setIsDashboard] = useState(false);
   const [authenticated,setAuthenticated] = useState(false);
-
+  const {loadingText,setLoadingText} = useAuth()
 
   useEffect(() => {
     setAuthenticated(pathname.startsWith("/dashboard"))
@@ -25,6 +25,7 @@ const Navbar = () => {
 
   const handleLogout =async() => {
     try{
+      setLoadingText(true)
       const response = await axios.get('/api/auth/logout/')
       if(response){
       await axios.post('/api/auth/logout')  
@@ -35,7 +36,9 @@ const Navbar = () => {
       console.log(err)
       signOut({ callbackUrl: "/login" })
     }
+    setLoadingText(false)
   };
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -68,7 +71,6 @@ const Navbar = () => {
 
         {/* Desktop Auth Section */}
         <div className="hidden md:flex justify-center items-center gap-2">
-          <FaUser size={23} color="white"/>
           <div className="flex items-center justify-center p-2 gap-5 mr-5">
             {!authenticated && (
               <button className="group relative inline-flex h-9 items-center justify-center overflow-hidden rounded-md border border-gray-400 font-medium">
@@ -83,10 +85,10 @@ const Navbar = () => {
             )} 
             {authenticated && (
               <button onClick={handleLogout} className="cursor-pointer group relative inline-flex h-8 items-center justify-center overflow-hidden rounded-md  font-medium">
-                <div className={`inline-flex ${isDashboard ? 'bg-red-600': ''} h-8 translate-y-0 items-center justify-center px-4 text-white transition duration-500 group-hover:-translate-y-[150%]`}>Logout</div>
+                <div className={`inline-flex ${isDashboard ? 'bg-red-600': ''} h-8 translate-y-0 items-center justify-center px-4 text-white transition duration-500 group-hover:-translate-y-[150%]`}>{loadingText ? 'Loading' : 'Log out'}</div>
                 <div className="absolute inline-flex h-9 w-full translate-y-[100%] items-center justify-center text-neutral-50 transition duration-500 group-hover:translate-y-0">
                   <span className="cursor-pointer absolute h-full w-full translate-y-full skew-y-12 scale-y-0 bg-red-800 transition duration-500 group-hover:translate-y-0 group-hover:scale-150"></span>
-                  <span className="z-10">Log out</span>
+                  <span className="z-10">{loadingText ? 'Loading' : 'Log out'}</span>
                 </div>
               </button>
             )}
