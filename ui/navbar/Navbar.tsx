@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState,useEffect } from "react";
-import Link from "next/link";
 import axios from "axios";
 import { BiMenu, BiX } from "react-icons/bi";
 import { signOut } from "next-auth/react";
@@ -9,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { IoLogoFirefox } from "react-icons/io5";
 import Modal from "./Modal";
 import { useAuth } from "@/context/AppContext";
+import Link from "next/link";
 
 
 const Navbar = () => {
@@ -62,10 +62,18 @@ const Navbar = () => {
 
        {!isDashboard && (
         <ul className="hidden md:flex gap-10  justify-center items-center text-sm">
-          <li>Services</li>
-          <li>About us</li>
-          <li>Contact</li>
-          <li>How it works</li>
+          <Link href="/service">
+            <li>Services</li>
+          </Link>
+          <Link href="/about">
+            <li>About us</li>
+          </Link>
+          <Link href="/contact">
+            <li>Contact</li>
+          </Link>
+          <Link href="/working">
+            <li>How it works</li>
+          </Link>
         </ul>
        )}
 
