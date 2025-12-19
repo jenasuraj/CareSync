@@ -18,10 +18,18 @@ const Modal = ({authenticated,setIsMenuOpen, handleLogout,isMenuOpen}:propsType)
         <div className="flex flex-col items-center py-6 space-y-6 text-white">
           {/* Mobile Navigation Links */}
           <ul className="flex flex-col gap-6 items-center text-sm">
+          <Link href="/service">
             <li>Services</li>
+          </Link>
+          <Link href="/about">
             <li>About us</li>
+          </Link>
+          <Link href="/contact">
             <li>Contact</li>
+          </Link>
+          <Link href="/working">
             <li>How it works</li>
+          </Link>
           </ul>
 
           {/* Mobile Auth Section */}
