@@ -9,18 +9,23 @@ import { IoLogoFirefox } from "react-icons/io5";
 import Modal from "./Modal";
 import { useAuth } from "@/context/AppContext";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 
 const Navbar = () => {
-  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDashboard,setIsDashboard] = useState(false);
   const [authenticated,setAuthenticated] = useState(false);
   const {loadingText,setLoadingText} = useAuth()
+  const [localLoading,setLocalLoading] = useState<boolean>(false)
+  const router =  useRouter()
+  const pathname = usePathname()
+
 
   useEffect(() => {
     setAuthenticated(pathname.startsWith("/dashboard"))
     setIsDashboard(pathname.startsWith("/dashboard"));
+    setLocalLoading(false)
   }, [pathname]);
 
   const handleLogout =async() => {
@@ -42,6 +47,12 @@ const Navbar = () => {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  const RouteToLoginPage = ()=>{
+  if(pathname.startsWith('/login')) return
+  setLocalLoading(true)
+  router.push('/login') 
+  }
 
 
   return (
@@ -81,13 +92,13 @@ const Navbar = () => {
         <div className="hidden md:flex justify-center items-center gap-2">
           <div className="flex items-center justify-center p-2 gap-5 mr-5">
             {!authenticated && (
-              <button className="group relative inline-flex h-9 items-center justify-center overflow-hidden rounded-md border border-gray-400 font-medium">
+              <button onClick={RouteToLoginPage} className="group relative inline-flex h-9 items-center justify-center overflow-hidden rounded-md border border-gray-400 font-medium">
                 <div className="inline-flex h-12 translate-y-0 items-center justify-center px-4 text-white transition duration-500 group-hover:-translate-y-[150%]">
-                  <Link href="/login">Login</Link>
+                  {localLoading ? 'Loading' : 'Login'}
                 </div>
                 <div className="absolute inline-flex h-9 w-full translate-y-[100%] items-center justify-center text-neutral-50 transition duration-500 group-hover:translate-y-0">
                   <span className="absolute h-full w-full translate-y-full skew-y-12 scale-y-0 bg-blue-700 transition duration-500 group-hover:translate-y-0 group-hover:scale-150"></span>
-                  <span className="z-10"><Link href="/login">Login</Link></span>
+                  <span className="z-10">{localLoading ? 'Loading' : 'Login'}</span>
                 </div>
               </button>
             )} 
