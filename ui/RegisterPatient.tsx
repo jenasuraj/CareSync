@@ -22,6 +22,7 @@ const RegisterPatient = () => {
     phone: "",
     address: "",
   });
+  const [localLoading,setLocalLoading] = useState<boolean>(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
@@ -32,7 +33,7 @@ const RegisterPatient = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // stops page refresh
-    setLoading(true);
+    setLocalLoading(true)
 
     try {
       const res = await axios.post(
@@ -59,7 +60,7 @@ const RegisterPatient = () => {
                     setMessage("Server error")
                 }
             }
-            setLoading(false)
+  setLocalLoading(false)
   };
 
   return (
@@ -116,7 +117,7 @@ const RegisterPatient = () => {
           type="submit"
           className="mb-3 bg-gradient-to-r from-blue-900 to-indigo-600 w-full p-3 flex items-center justify-center gap-2 text-white rounded-md hover:cursor-pointer disabled:opacity-60"
         >
-          Register
+          {localLoading ? 'Registering...' : 'Register'}
           <HiArrowTopRightOnSquare size={20} />
         </button>
       </form>

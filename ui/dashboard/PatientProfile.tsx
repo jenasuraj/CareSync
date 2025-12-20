@@ -41,7 +41,7 @@ const PatientProfileFront = () => {
   const [showRefresh, setShowRefresh] = useState(false);
   const router = useRouter()
   const [testClicked,setTestClicked] = useState<boolean>(false)
-  
+  const [localLoading,setLocalLoading] = useState<boolean>(false)
 
 
   const appointment_columns: Column<appointmentFormat>[] = [
@@ -117,6 +117,11 @@ const PatientProfileFront = () => {
     fetchTransactionData();
   }, []);
 
+  const RouteToAppointment = (slug:ParamValue)=>{
+    setLocalLoading(true)
+    router.push(`/dashboard/admin/appointments/?id=${slug}`)
+  }
+
   return (
 <>
 {testClicked && (
@@ -129,8 +134,8 @@ const PatientProfileFront = () => {
           Welcome to your personalised platform !
         </p>
         <div className="w-full h-[10vh] px-5 py-2 m-2 text-gray-300 flex gap-2">
-        <button onClick={()=>router.push(`/dashboard/admin/appointments/?id=${slug}`)} className="w-1/3 h-full hover:border hover:border-gray-500 rounded-sm bg-blue-900 hover:bg-transparent hover:cursor-pointer transition-all  duration-300">
-            Appointment
+        <button onClick={()=>RouteToAppointment(slug)} className="w-1/3 h-full hover:border hover:border-gray-500 rounded-sm bg-blue-900 hover:bg-transparent hover:cursor-pointer transition-all  duration-300">
+            {localLoading ? 'Loading' : 'Appointment'}
         </button>
        <Admit slug={slug}/>
         <button onClick={()=>setTestClicked(true)} className="w-1/3 h-full hover:border hover:border-gray-500 rounded-sm bg-blue-900 hover:bg-transparent hover:cursor-pointer transition-all  duration-300">

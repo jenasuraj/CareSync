@@ -27,11 +27,17 @@ export interface Column<T> {
 }
 
 const PatientProfileFront = () => {
-  const { setLoading, setMessage } = useAuth();
+  const { setLoading, setMessage} = useAuth();
   const [patients, setPatients] = useState<patientData[]>([]);
   const [showRefresh, setShowRefresh] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter()
+  const [localLoading,setLocalLoading] = useState<number | null>(null)
+
+  const RouteToProfile = (id:number)=>{
+    setLocalLoading(id)
+    router.push(`/dashboard/admin/profile/${id}`)
+  }
 
   const columns: Column<patientData>[] = [
     { label: "Name", key: "name" },
@@ -40,8 +46,8 @@ const PatientProfileFront = () => {
     { label: "Address", key: "address"},
     {label: "Profile", key:"profile",
       render: (row) => (
-          <button onClick={()=>router.push(`/dashboard/admin/profile/${row.id}`)} className="cursor-pointer px-2 py-1 rounded-sm bg-blue-800 text-white">
-            Profile
+          <button onClick={()=>RouteToProfile(row.id)} className="cursor-pointer px-2 py-1 rounded-sm bg-blue-800 text-white">
+            {localLoading == row.id ? "Loading" : "Profile"}
           </button>
         ),}
   ];
