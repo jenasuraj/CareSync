@@ -13,10 +13,10 @@ import { FaUser } from "react-icons/fa6";
 
 
 interface HospitalDataType{
-    appointments:number | null,
-    admitted:number | null,
-    money:number | null,
-    users:number | null
+    appointments:number ,
+    admitted:number,
+    money:number ,
+    users:number
 }
 
 interface propTypes{
@@ -34,10 +34,10 @@ const UpperSection = ({optionValue,setOptionValue}:propTypes) => {
     ] as const
 
   const [hospitalData,setHospitalData] = useState<HospitalDataType>({
-    appointments:null,
-    admitted:null,
-    money:null,
-    users:null
+    appointments:0,
+    admitted:0,
+    money:0,
+    users:0
   })
   const [localLoading,setLocalLoading] = useState<boolean>(false)
 
@@ -61,8 +61,8 @@ const UpperSection = ({optionValue,setOptionValue}:propTypes) => {
   setLocalLoading(false)
   }
 
-  const AddCommaToNumbers = (plainNumber:number | null):string=>{
-  return String(plainNumber) 
+  const AddCommaToNumbers = (num:number):string=>{
+  return num.toLocaleString("en-IN"); 
   }
 
   useEffect(()=>{
