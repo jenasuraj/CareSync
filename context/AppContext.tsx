@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState<boolean>(false); // default false
   const [message,setMessage] = useState("")
   const [loadingText,setLoadingText] = useState<boolean>(false)
-  const [sidebarOpen,setSidebarOpen] = useState<boolean>(false)
+  const [sidebarOpen,setSidebarOpen] = useState<boolean>(true)
 
   return (
     <AuthContext.Provider value={{ loading, setLoading,message,setMessage,setLoadingText,loadingText,sidebarOpen,setSidebarOpen }}>

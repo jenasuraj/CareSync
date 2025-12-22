@@ -17,7 +17,7 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
           <Provider>
           <Navbar />
           <main className={`w-full min-h-screen bg-gradient-to-t from-violet-700 to-indigo-800`}>{children}</main>
-          <Footer />
+            <Footer />
           </Provider>
       </body>
     </html>

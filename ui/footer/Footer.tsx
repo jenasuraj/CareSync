@@ -1,6 +1,12 @@
+"use client"
 import React from 'react';
+         // {!pathname.startsWith('/dashboard/admin') || !pathname.startsWith('/dashboard/patient') && (
+import { usePathname } from "next/navigation";
+  
 
 const Footer = () => {
+  const pathname = usePathname()
+  if(!pathname.startsWith('/dashboard/admin')){
   return (
     <>
       <section className='text-white w-full h-24 bg-black flex flex-col md:flex-row items-center justify-between px-5 py-4'>
@@ -18,6 +24,12 @@ const Footer = () => {
       </section>
     </>
   );
+  }
+  else{
+    return(
+      <></>
+    )
+  }
 };
 
 export default Footer;

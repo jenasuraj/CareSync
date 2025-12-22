@@ -20,18 +20,25 @@ const Sidebar = ({ role }: { role: string}) => {
   const pathname = usePathname()
   const router = useRouter()
   const {sidebarOpen,setSidebarOpen,setLoading} = useAuth()
+  console.log("side bar",sidebarOpen)
 
-  const handleRoute = (item:dashboard_items_type)=>{
-     if(item.id === 13){
-      setSidebarOpen(!sidebarOpen)
-     }
-    if((pathname.startsWith(`/dashboard/patient${item.path}`) || pathname.startsWith(`/dashboard/admin${item.path}`)) && (item.path != '/')) return
-     else{
-     setLoading(true)
-      router.push(pathname.startsWith('/dashboard/patient') && item.path ? `/dashboard/patient${item.path}`:
-         pathname.startsWith('/dashboard/admin') && item.path ? `/dashboard/admin${item.path}`: '') 
-     }
-    }
+const handleRoute = (item: dashboard_items_type) => {
+  if (item.id === 13) {
+    setSidebarOpen(false)
+    return
+  }
+  let base = ''
+  if (pathname.startsWith('/dashboard/patient')) {
+    base = '/dashboard/patient'
+  } else if (pathname.startsWith('/dashboard/admin')) {
+    base = '/dashboard/admin'
+  }
+  const target = item.path === '/' ? base : `${base}${item.path}`
+  if (pathname === target) return
+  setLoading(true)
+  router.push(target || '/')
+}
+
   useEffect(() => {
   setLoading(false);
   }, [pathname]);
@@ -58,7 +65,7 @@ return (
         size={25}
         color="white"
         className="cursor-pointer mt-5"
-        onClick={() => setSidebarOpen(!sidebarOpen)}
+        onClick={() => setSidebarOpen(true)}
       />
     </div>
   )}  

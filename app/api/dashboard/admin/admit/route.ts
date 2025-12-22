@@ -58,7 +58,7 @@ export async function DELETE(req: NextRequest) {
     const result = await sql`
       UPDATE rooms
       SET p_id = NULL,
-          status = 'available'
+          status = 'available',date = CURRENT_DATE
       WHERE p_id = ${patientId};
     `;
 
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
     const response_admit = await sql`
       UPDATE rooms
       SET p_id = ${p_id},
-          status = 'unavailable'
+          status = 'unavailable',date = CURRENT_DATE
       WHERE room_no = ${room_no};`;
     
     const response_transaction = await sql `INSERT INTO transactions (p_id,money_type,reason,amount) VALUES (${p_id},${mode},${reason},${amount}) RETURNING *;`;
