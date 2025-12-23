@@ -1,21 +1,31 @@
-"use client"
+"use client";
 
-import React from 'react'
-import CardDataSection from '@/ui/AdminDashboardFront/CardDataSection'
-import TransactionSection from '@/ui/AdminDashboardFront/TransactionSection'
-import { useState } from 'react'
+import React, { useState } from "react";
+import CardDataSection from "@/ui/AdminDashboardFront/CardDataSection";
+import TransactionSection from "@/ui/AdminDashboardFront/TransactionSection";
 
 const Page = () => {
-const [optionValue,setOptionValue] = useState<string>("month")
-  return (
-<>
-<section className='flex-1 text-black flex flex-col p-2 gap-5'>
-{/**Upper 4 boxes to show data like total(appointments,admitted,money,users)*/}
-<CardDataSection optionValue={optionValue} setOptionValue={setOptionValue}/>
-<TransactionSection optionValue={optionValue} setOptionValue={setOptionValue}/>
-</section>
-</>
-  )
-}
+  const [optionValue, setOptionValue] = useState<string>("month");
 
-export default Page
+  return (
+    <section className="w-full p-3 grid grid-cols-1 gap-5 lg:grid-cols-12">
+      {/* TOP CARDS */}
+      <div className="lg:col-span-12">
+        <CardDataSection
+          optionValue={optionValue}
+          setOptionValue={setOptionValue}
+        />
+      </div>
+
+      {/* CHARTS */}
+      <div className="lg:col-span-12">
+        <TransactionSection
+          optionValue={optionValue}
+          setOptionValue={setOptionValue}
+        />
+      </div>
+    </section>
+  );
+};
+
+export default Page;

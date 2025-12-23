@@ -1,24 +1,25 @@
-"use client"
+"use client";
 
-import React from "react"
-import { ChartPieLegend } from '@/ui/AdminDashboardFront/ChartPieLegend'
-import { ChartBarInteractive } from "./ChartBarInteractive"
+import React from "react";
+import { ChartPieLegend } from "@/ui/AdminDashboardFront/ChartPieLegend";
+import { ChartBarInteractive } from "./ChartBarInteractive";
 
-
-interface propTypes{
-  optionValue:string,
-  setOptionValue:React.Dispatch<React.SetStateAction<string>>;
+interface Props {
+  optionValue: string;
+  setOptionValue: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const TransactionSection = ({optionValue,setOptionValue}:propTypes) => {
+const TransactionSection = ({ optionValue, setOptionValue }: Props) => {
   return (
-    <div className="flex-1 p-6 flex flex-col  gap-5">
-    <div className="w-full h-auto">
-     <ChartBarInteractive  optionValue={optionValue} setOptionValue={setOptionValue}/>
-    </div>
-      <ChartPieLegend optionValue={optionValue}/>
-    </div>
-  )
-}
+    <section className="w-full flex flex-col gap-5">
+      <ChartBarInteractive
+        optionValue={optionValue}
+        setOptionValue={setOptionValue}
+      />
 
-export default TransactionSection
+      <ChartPieLegend optionValue={optionValue} />
+    </section>
+  );
+};
+
+export default TransactionSection;

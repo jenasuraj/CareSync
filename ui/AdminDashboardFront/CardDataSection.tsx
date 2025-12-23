@@ -88,10 +88,8 @@ const UpperSection = ({optionValue,setOptionValue}:propTypes) => {
           <div className='w-full h-auto flex items-center justify-center gap-3'>
           {item.label}{item.icon} 
           </div>
-          <span className='text-green-300 flex text-sm items-center justify-center gap-2'>{AddCommaToNumbers(hospitalData[item.key])}<VscGraphLine color='lightgreen' size={20}/></span>
-        {item.key == 'users' && (
-            <span className='text-green-300 flex text-sm items-center justify-center gap-2'>Always static</span>
-        )}
+          <span className='text-green-300 flex text-sm items-center justify-center gap-2'>{AddCommaToNumbers(hospitalData[item.key])}<VscGraphLine color='lightgreen' size={20}/>{item.key=="users" ? "static data" : ""}</span>
+
         </div>
       )
     })}

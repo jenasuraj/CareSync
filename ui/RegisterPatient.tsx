@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { FcMindMap } from "react-icons/fc";
 import { HiArrowTopRightOnSquare } from "react-icons/hi2";
 import { useAuth } from "@/context/AppContext";
-import { AxiosError } from "axios";
 
 interface FormDataType {
   name: string;
@@ -15,113 +14,160 @@ interface FormDataType {
 }
 
 const RegisterPatient = () => {
-  const {setLoading,setMessage} = useAuth()
+  const { setMessage } = useAuth();
+
   const [formData, setFormData] = useState<FormDataType>({
     name: "",
     email: "",
     phone: "",
     address: "",
   });
-  const [localLoading,setLocalLoading] = useState<boolean>(false)
+
+  const [localLoading, setLocalLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // stops page refresh
-    setLocalLoading(true)
+    e.preventDefault();
+    setLocalLoading(true);
 
     try {
-      const res = await axios.post(
-        "/api/dashboard/admin/patients",
-        formData
-      );
-      setMessage("User registered")
-      setFormData({name:"",phone:"",address:"",email:""}) 
-      console.log("Patient registered:", res.data);
-
-      // reset form after success
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        address: "",
-      });
-    }     catch(err){
-                const error = err as AxiosError<{ message: string }>;
-                if(error.status == 404){
-                    setMessage("Duplicate data detected")
-                }
-                else{
-                    setMessage("Server error")
-                }
-            }
-  setLocalLoading(false)
+      await axios.post("/api/dashboard/admin/patients", formData);
+      setMessage("Patient registered successfully");
+      setFormData({ name: "", email: "", phone: "", address: "" });
+    } catch (err) {
+      const error = err as AxiosError;
+      if (error.response?.status === 409) {
+        setMessage("Duplicate data detected");
+      } else {
+        setMessage("Server error");
+      }
+    } finally {
+      setLocalLoading(false);
+    }
   };
 
   return (
-    <div className="w-full flex items-center justify-center p-3 flex-col mt-7">
-      <form
-        onSubmit={handleSubmit}
-        className="rounded-lg min-h-[60vh] w-full md:w-2/3 p-4 flex flex-col gap-3 items-center justify-center border border-gray-300 shadow-sm"
-      >
-        <h1 className="w-full flex items-center gap-2 justify-center text-2xl mb-5">
-          Patient Registration <FcMindMap size={25} />
-        </h1>
+    <section className="w-full flex justify-center px-4 py-10">
+      <div className="w-full max-w-2xl">
+        {/* CARD */}
+        <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+          {/* HEADER */}
+          <div className="border-b px-6 py-5 flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-50">
+              <FcMindMap size={22} />
+            </div>
+            <div>
+              <h1 className="text-lg sm:text-xl font-semibold text-gray-900">
+                Patient Registration
+              </h1>
+              <p className="text-sm text-gray-500">
+                Enter patient personal details
+              </p>
+            </div>
+          </div>
 
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          placeholder="Enter Your Name"
-          className="p-2 w-full border border-gray-300 rounded-md"
-          onChange={handleChange}
-          required
-        />
+          {/* FORM */}
+          <form
+            onSubmit={handleSubmit}
+            className="px-6 py-6 grid grid-cols-1 sm:grid-cols-2 gap-5"
+          >
+            {/* NAME */}
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-medium text-gray-700">
+                Full Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="John Doe"
+                className="input p-2"
+                required
+              />
+            </div>
 
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          placeholder="Enter Your Email"
-          className="p-2 w-full border border-gray-300 rounded-md"
-          onChange={handleChange}
-          required
-        />
+            {/* EMAIL */}
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-medium text-gray-700">
+                Email Address
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="john@email.com"
+                className="input p-2"
+                required
+              />
+            </div>
 
-        <input
-          type="text"
-          name="phone"
-          value={formData.phone}
-          placeholder="Enter Your Phone"
-          className="p-2 w-full border border-gray-300 rounded-md"
-          onChange={handleChange}
-          required
-        />
+            {/* PHONE */}
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-medium text-gray-700">
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="+91 XXXXX XXXXX"
+                className="input p-2"
+                required
+              />
+            </div>
 
-        <input
-          type="text"
-          name="address"
-          value={formData.address}
-          placeholder="Enter Your Address"
-          className="p-2 w-full border border-gray-300 rounded-md"
-          onChange={handleChange}
-          required
-        />
+            {/* ADDRESS */}
+            <div className="flex flex-col gap-1 sm:col-span-2">
+              <label className="text-sm font-medium text-gray-700">
+                Address
+              </label>
+              <input
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                placeholder="Street, City, State"
+                className="input p-2"
+                required
+              />
+            </div>
 
-        <button
-          type="submit"
-          className="mb-3 bg-gradient-to-r from-blue-900 to-indigo-600 w-full p-3 flex items-center justify-center gap-2 text-white rounded-md hover:cursor-pointer disabled:opacity-60"
-        >
-          {localLoading ? 'Registering...' : 'Register'}
-          <HiArrowTopRightOnSquare size={20} />
-        </button>
-      </form>
-    </div>
+            {/* BUTTON */}
+            <div className="sm:col-span-2 mt-4">
+              <button
+                type="submit"
+                disabled={localLoading}
+                className="
+                  w-full 
+                  flex 
+                  items-center 
+                  justify-center 
+                  gap-2 
+                  rounded-lg 
+                  bg-indigo-600 
+                  py-3 
+                  text-white 
+                  font-medium 
+                  transition 
+                  hover:bg-indigo-700 
+                  disabled:opacity-60
+                "
+              >
+                {localLoading ? "Registering..." : "Register Patient"}
+                <HiArrowTopRightOnSquare size={18} />
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
   );
 };
 

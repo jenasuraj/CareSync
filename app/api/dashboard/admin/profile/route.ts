@@ -14,12 +14,13 @@ export async function GET(req: NextRequest) {
     if(id && appointmentData){
       const response = await sql  `SELECT doctors.name, doctors.experience,doctors.department,appointments.date AT TIME ZONE ${timeZone},appointments.id
                                   FROM appointments INNER JOIN doctors
-                                  ON appointments.d_id = doctors.id WHERE appointments.date>=CURRENT_DATE`                           
+                                  ON appointments.d_id = doctors.id WHERE appointments.date>=CURRENT_DATE AND appointments.p_id = ${id}`                           
       return NextResponse.json(
       { message: "list of appointment data for a single profile", success: true, data: response},
       { status: 200 }
     );
     }
+   
 
     if(id && transactionData){
       const response = await sql `SELECT money_type, reason,date AT TIME ZONE ${timeZone},amount FROM transactions WHERE p_id=${id}`                          

@@ -19,25 +19,21 @@ const Modal = ({authenticated,setIsMenuOpen, handleLogout,isMenuOpen}:propsType)
           {/* Mobile Navigation Links */}
           <ul className="flex flex-col gap-6 items-center text-sm">
           <Link href="/service">
-            <li>Services</li>
+            <li onClick={()=>setIsMenuOpen(false)}>Services</li>
           </Link>
           <Link href="/about">
-            <li>About us</li>
+            <li onClick={()=>setIsMenuOpen(false)}>About us</li>
           </Link>
           <Link href="/contact">
-            <li>Contact</li>
+            <li onClick={()=>setIsMenuOpen(false)}>Contact</li>
           </Link>
           <Link href="/working">
-            <li>How it works</li>
+            <li onClick={()=>setIsMenuOpen(false)}>How it works</li>
           </Link>
           </ul>
 
           {/* Mobile Auth Section */}
           <div className="flex flex-col items-center gap-4 mt-4">
-            <div className="flex items-center gap-2">
-              <BiUser size={20} color="white"/>
-              <span>Account</span>
-            </div>
             <div className="flex flex-col gap-4 items-center">
               {!authenticated && (
                 <button className="group relative inline-flex h-9 items-center justify-center overflow-hidden rounded-md border border-gray-400 font-medium">

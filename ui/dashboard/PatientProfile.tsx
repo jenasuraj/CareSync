@@ -84,7 +84,7 @@ useEffect(() => {
       const res = await axios.get("/api/dashboard/admin/profile", {
         params: { id: slug, appointmentData: true }
       })
-
+       console.log("appointments data is",res)
       const formatted = res.data.data.map((item: AppointmentFormat) => ({
         ...item,
         timezone: item.timezone.slice(0, 10)
