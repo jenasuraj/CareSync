@@ -5,7 +5,7 @@ import CardDataSection from '@/ui/AdminDashboardFront/CardDataSection'
 import TransactionSection from '@/ui/AdminDashboardFront/TransactionSection'
 import { useState } from 'react'
 
-const page = () => {
+const Page = () => {
 const [optionValue,setOptionValue] = useState<string>("month")
   return (
 <>
@@ -18,4 +18,4 @@ const [optionValue,setOptionValue] = useState<string>("month")
   )
 }
 
-export default page
+export default Page

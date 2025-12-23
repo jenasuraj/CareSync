@@ -8,13 +8,15 @@ import Input from "@/components/Input";
 import Button from "@/components/Button";
 import { MdOutlineSubdirectoryArrowLeft } from "react-icons/md";
 import { Employee } from "@/types/Employee";
+import type { CloudinaryUploadWidgetInfo } from "next-cloudinary";
+
 
 interface propTypes{ 
   currentPage: string, 
   setMessage: React.Dispatch<React.SetStateAction<string>>,  
   setLoading:React.Dispatch<React.SetStateAction<boolean>>,
   setPageRefreshed:React.Dispatch<React.SetStateAction<boolean>>,
-  updateTriggered:Employee
+  updateTriggered:Employee | null
 }
 
 const AddEmployee = ({ currentPage,setMessage,setLoading, setPageRefreshed,updateTriggered}:propTypes) => {
@@ -123,17 +125,23 @@ const departments =
           </select>
         )}
       <Input placeholder="Enter your Experience" size="auto" style="outline" valueData={formData.experience} handleChange={handleChange} type="number" name="experience"/> 
-      <CldUploadWidget
-              uploadPreset="jensen"
-              onSuccess={(result) => {
-                if (result.event === "success") {
-                  setFormData((prev) => ({
+          <CldUploadWidget
+            uploadPreset="jensen"
+            onSuccess={(result) => {
+              if (
+                result.event === "success" &&
+                typeof result.info === "object" &&
+                "public_id" in result.info
+              ) {
+                const info = result.info as CloudinaryUploadWidgetInfo;
+
+                setFormData((prev) => ({
                   ...prev,
-                  file: result?.info?.public_id,
+                  file: info.public_id,
                 }));
-                }
-              }}
-            >
+              }
+            }}
+          >
               {({ open }) => (
                 <button
                   className="bg-gradient-to-r from-blue-900 to-indigo-800 text-white py-2 px-4 rounded-sm  transition-all w-full md:w-1/7"

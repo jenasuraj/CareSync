@@ -16,7 +16,7 @@ useEffect(() => {
 
     return () => clearTimeout(timer); // cleanup (important)
   }
-}, [message]);
+}, [message,setMessage]);
 
   return (
     <>

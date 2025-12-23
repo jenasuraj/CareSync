@@ -7,7 +7,6 @@ import { NextResponse,NextRequest } from "next/server";
           const sql = neon(process.env.POSTGRES_URL!);
           const { searchParams } = new URL(req.url);
           const id:number = Number(searchParams.get("id"))
-          console.log("room",id)
           //fetch appointment data joined with doctors from today onwards...
           if(id){
             const response = await sql`
@@ -17,7 +16,6 @@ import { NextResponse,NextRequest } from "next/server";
                                 LIMIT 1;
                                 `;
             if(response.length==0){
-                console.log("no room",response)
                             const all_rooms = await sql`
                                 SELECT *
                                 FROM rooms WHERE status = 'available'
@@ -26,8 +24,7 @@ import { NextResponse,NextRequest } from "next/server";
             { message: "room ain't booked, so take all rooms", success: true, data: all_rooms,admitted:false},
             { status: 200 }
             );
-            } 
-            console.log("room is",response)                                             
+            }                                            
             return NextResponse.json(
             { message: "room data ", success: true, data: response,admitted:true},
             { status: 200 }
@@ -35,9 +32,8 @@ import { NextResponse,NextRequest } from "next/server";
           }
 
         } catch (error) {
-          console.error(error);
           return NextResponse.json(
-            { message: "Server error", success: false },
+            { message: "Server error", success: false,data:error},
             { status: 500 }
           );
         }
@@ -63,12 +59,12 @@ export async function DELETE(req: NextRequest) {
     `;
 
     return NextResponse.json({
+      updation_data:result,
       success: true,
     });
   } catch (err) {
-    console.error("Discharge error:", err);
     return NextResponse.json(
-      { success: false, message: "Server error" },
+      { success: false, message: "Server error", data:err },
       { status: 500 }
     );
   }
@@ -92,7 +88,7 @@ export async function POST(req: NextRequest) {
     
     const response_transaction = await sql `INSERT INTO transactions (p_id,money_type,reason,amount) VALUES (${p_id},${mode},${reason},${amount}) RETURNING *;`;
     return NextResponse.json(
-      { success: true, message: "patient admitted" },
+      { success: true, message: "patient admitted", admit_data:response_admit, transaction_data:response_transaction},
       { status: 200 }
     );
 

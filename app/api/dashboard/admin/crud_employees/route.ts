@@ -1,6 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
 import { neon } from "@neondatabase/serverless";
-import { Target } from "lucide-react";
 
 export async function DELETE(req: NextRequest) {
     const sql = neon(process.env.POSTGRES_URL!);
@@ -8,10 +7,8 @@ export async function DELETE(req: NextRequest) {
     const id = searchParams.get("id");
     const currentPage = searchParams.get("currentPage"); // optional
     const table  = currentPage?.toLocaleLowerCase()
-    console.log("table is",table,"id is",id)
     if(table == 'doctors'){
     const employeeLists = await sql `DELETE FROM doctors WHERE id = ${id}`;
-    console.log(employeeLists)
     return NextResponse.json(
         {
         message: `Deleted doctor successfully.`,
@@ -23,7 +20,6 @@ export async function DELETE(req: NextRequest) {
     }
     else if(table == 'nurses'){
     const employeeLists = await sql `DELETE FROM nurses WHERE id = ${id}`;
-    console.log(employeeLists)
     return NextResponse.json(
         {
         message: `Deleted Nurses successfully.`,
@@ -35,7 +31,6 @@ export async function DELETE(req: NextRequest) {
     }
     else if(table == 'pharmacists'){
     const employeeLists = await sql `DELETE FROM pharmacists WHERE id = ${id}`;
-    console.log(employeeLists)
     return NextResponse.json(
         {
         message: `Deleted pharmacists successfully.`,
@@ -47,7 +42,6 @@ export async function DELETE(req: NextRequest) {
     }
     else{
     const employeeLists = await sql `DELETE FROM others WHERE id = ${id}`;
-    console.log(employeeLists)
     return NextResponse.json(
         {
         message: `Deleted others successfully.`,
@@ -67,7 +61,6 @@ export async function GET(req: NextRequest) {
   const table = current?.toLowerCase()
 
 if (table === 'doctors') {
-  console.log("in dest", employeeName, table);
   const query = !employeeName
     ? sql`SELECT * FROM doctors ORDER BY experience DESC LIMIT 5`
     : sql`SELECT * FROM doctors WHERE LOWER(name) LIKE ${'%' + employeeName.toLowerCase() + '%'}`;
@@ -370,7 +363,6 @@ export async function POST(req: NextRequest) {
 export async function PUT(req:NextRequest) {
  const body = await req.json()
  const sql = neon(process.env.POSTGRES_URL!);
- console.log(body.target,body.id)
  if(body?.id && body?.target == 'inactive'){
  const response = await sql`UPDATE doctors SET status = 'inactive' WHERE id = ${Number(body?.id)}`
  return NextResponse.json({ success: true, message: `updated successfully`,data:response[0]},{status:201});

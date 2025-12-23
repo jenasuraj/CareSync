@@ -27,7 +27,7 @@ interface ShowEmployeeProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setPageRefreshed: React.Dispatch<React.SetStateAction<boolean>>;
   loading: boolean;
-  setUpdateTriggered:React.Dispatch<React.SetStateAction<Employee>>;
+  setUpdateTriggered:React.Dispatch<React.SetStateAction<Employee | null>>;
 }
 
 const ShowEmployee = ({
@@ -73,7 +73,7 @@ const columns: Column<Employee>[] = [
         {
           label: "Status",
           key: "status",
-          render: (row, index) => (
+          render: (row:any, index:any) => (
             <p
               className="cursor-pointer inline-block p-1 rounded-sm text-white"
               onClick={() => handleChangeActive(row.id, index)}

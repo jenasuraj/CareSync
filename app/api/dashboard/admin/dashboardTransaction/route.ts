@@ -28,6 +28,7 @@ export async function GET(req: NextRequest) {
         GROUP BY date
         ORDER BY date
       `;
+    
 
       const admissions = await sql`
         SELECT 
@@ -37,34 +38,44 @@ export async function GET(req: NextRequest) {
         WHERE status = 'unavailable'
         AND date >= CURRENT_DATE - (${range} * INTERVAL '1 day')
         GROUP BY date
-        ORDER BY date
-      `;
+        ORDER BY date`;
+    
 
-      /* -------- MERGE BY DATE (SERVER-SIDE) -------- */
-      const map = new Map<string, any>();
+      // Create a map keyed by date
+      const dataMap = new Map<string, { 
+        date: string
+        appointments: number
+        admission: number
+      }>()
 
-      appointments.forEach((row) => {
-        map.set(row.date, {
-          date: row.date,
-          appointments: row.appointments,
+      // Insert appointments
+      appointments.forEach(item => {
+        dataMap.set(item.date, {
+          date: item.date,
+          appointments: item.appointments,
           admission: 0,
-        });
-      });
+        })
+      })
 
-      admissions.forEach((row) => {
-        if (map.has(row.date)) {
-          map.get(row.date).admission = row.admission;
+      // Merge admissions
+      admissions.forEach(item => {
+        if (dataMap.has(item.date)) {
+          dataMap.get(item.date)!.admission = item.admission
         } else {
-          map.set(row.date, {
-            date: row.date,
+          dataMap.set(item.date, {
+            date: item.date,
             appointments: 0,
-            admission: row.admission,
-          });
+            admission: item.admission,
+          })
         }
-      });
+      })
 
-      const chartData = Array.from(map.values());
+      // Final array (sorted by date)
+      const chartData = Array.from(dataMap.values()).sort(
+        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+      )
 
+       
       return NextResponse.json(
         {
           success: true,

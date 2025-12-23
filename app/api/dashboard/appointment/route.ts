@@ -8,7 +8,6 @@ export async function POST(req: NextRequest) {
     const { mode, date, d_id, p_id } = body;
     const appointment_amount:number = 200
     const money_reason: string = "appointment"
-    console.log("in server",date,d_id,mode,p_id)
     if(!p_id || !date || !mode || !d_id){
       return NextResponse.json(
       {
@@ -23,7 +22,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(
       {
         message: "Appointment booked ",
-        success: true,
+        success: true,appointment_data:response,transaction_data:response2
       },
       { status: 200 }
     );
@@ -47,15 +46,13 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const currentDate = searchParams.get("date");
     const appointment = searchParams.get("appointment");
-    console.log("doctor id is",appointment)
     if(appointment){      
     const response = await sql`
       SELECT patients.name, patients.phone
       FROM appointments
       JOIN patients ON appointments.p_id = patients.id
       WHERE appointments.d_id = ${appointment}
-        AND appointments.date = CURRENT_DATE`;
-    console.log(response)                            
+        AND appointments.date = CURRENT_DATE`;                           
      if(response.length == 0){
       return NextResponse.json(
         { message: "No appointments present for today", success: true },

@@ -7,7 +7,7 @@ import axios,{ AxiosError } from 'axios'
 
 
 
-const Test = ({patientId,setTestClicked}:{patientId:ParamValue,setTestClicked: React.Dispatch<React.SetStateAction<boolean>>;}) => {
+const Test = ({patientId,setTestClicked}:{patientId:string | null,setTestClicked: React.Dispatch<React.SetStateAction<boolean>>;}) => {
   interface scheme {
   id:number
   name:string,

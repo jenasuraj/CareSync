@@ -29,7 +29,7 @@ const {message,setMessage,setLoading,loading} = useAuth()
 const [pageRefreshed,setPageRefreshed] = useState(false)
 const [employeeName,setEmployeeName] = useState('')
 const [buttonTriggered, setButtonTriggered] = useState(false)
-const [updateTriggered,setUpdateTriggered] = useState<Employee>()
+const [updateTriggered,setUpdateTriggered] = useState<Employee | null>(null)
 
 useEffect(() => {
     const fetchData = async () => {
@@ -49,7 +49,7 @@ useEffect(() => {
       }
     };
     fetchData();
-}, [currentPage,pageRefreshed,buttonTriggered]);
+}, [currentPage,pageRefreshed,buttonTriggered]); //future error could it be this line
 
 
 return (
