@@ -9,7 +9,7 @@ import { IoLogoFirefox } from "react-icons/io5";
 import Modal from "./Modal";
 import { useAuth } from "@/context/AppContext";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"; 
 
 
 const Navbar = () => {
@@ -71,7 +71,6 @@ const Navbar = () => {
           )}
         </h1>
 
-       {!isDashboard && (
         <ul className="hidden md:flex gap-10  justify-center items-center text-sm">
           <Link href="/service">
             <li>Services</li>
@@ -86,7 +85,6 @@ const Navbar = () => {
             <li>How it works</li>
           </Link>
         </ul>
-       )}
 
         {/* Desktop Auth Section */}
         <div className="hidden md:flex justify-center items-center gap-2">

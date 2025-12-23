@@ -16,7 +16,6 @@ const Page = () => {
           setOptionValue={setOptionValue}
         />
       </div>
-
       {/* CHARTS */}
       <div className="lg:col-span-12">
         <TransactionSection
