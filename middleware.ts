@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 export function middleware(req: NextRequest) {
   console.log("i am in middleware...");
   const token = req.cookies?.get("token")?.value;
-  const gtoken = req.cookies?.get("next-auth.session-token")?.value;
+  const gtoken = req.cookies.get("__Secure-next-auth.session-token")?.value || req.cookies.get("next-auth.session-token")?.value;
   const admin_token = req.cookies?.get("admin_token")?.value;
   const { pathname } = req.nextUrl;
   const publicRoutes = ["/", "/login"];
