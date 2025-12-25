@@ -8,6 +8,8 @@ export async function DELETE(req: NextRequest) {
     const currentPage = searchParams.get("currentPage"); // optional
     const table  = currentPage?.toLocaleLowerCase()
     if(table == 'doctors'){
+    const isFutureAppointmentsThere = await sql `DELETE FROM appointments WHERE d_id = ${id}   RETURNING *;`
+    console.log("data is",isFutureAppointmentsThere)  
     const employeeLists = await sql `DELETE FROM doctors WHERE id = ${id}`;
     return NextResponse.json(
         {
