@@ -10,10 +10,10 @@ import Image from "next/image";
 import Table from "@/components/Table";
 import { TiTick } from "react-icons/ti";
 import Modal from '@/components/Modal'
-import { useAuth } from "@/context/AppContext";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
+import { useAuth } from "@/context/AppContext";
 
 export interface Column<T> {
   label: string;
@@ -22,6 +22,7 @@ export interface Column<T> {
 }
 
 const Appointment = () => {
+  const {userId,setUserId} = useAuth()
   const searchparams = useSearchParams()
   const [p_id,setP_id] = useState(0)
   const patientId:number = Number(searchparams.get("id"))
@@ -39,9 +40,18 @@ const Appointment = () => {
   })
   const [mode,setMode] = useState("online") 
 
+  const checkUserOrAdmin = ()=>{
+  if(userId){
+    setP_id(userId)
+  }
+  else if(patientId){
+    setP_id(patientId)
+  }
+  }
+
   useEffect(()=>{
-  setP_id(patientId)
-  },[patientId])
+  checkUserOrAdmin()
+  },[patientId,userId])
 
   const columns: Column<Employee>[] = [
     {
@@ -146,10 +156,10 @@ return (
             <LiaSearchPlusSolid className="text-white" size={38} />
           </div>
 
-          <div className="flex items-center w-full  bg-white rounded-lg overflow-hidden border border-gray-300">
+          <div className="flex items-center w-full md:w-1/2 bg-transparent rounded-lg overflow-hidden border border-gray-300">
             <input
               type="date"
-              className="flex-1 px-5 py-3 h-[9vh] text-gray-700 focus:outline-none rounded-sm"
+              className="flex-1 px-5 py-3 h-[9vh] text-gray-200 focus:outline-none rounded-sm"
               onChange={(e) => setDate(e.target.value)}
             />
           </div>

@@ -99,7 +99,7 @@ export async function GET(req: NextRequest) {
       `;
 
       return NextResponse.json(
-        { message: "Patient linked", success: true, data: updated[0] },
+        { message: "Patient linked", success: true, data: updated[0]},
         { status: 200 }
       );
     }

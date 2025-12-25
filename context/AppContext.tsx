@@ -9,7 +9,9 @@ interface AuthContextType {
   loadingText: boolean;
   setLoadingText:React.Dispatch<React.SetStateAction<boolean>>
   sidebarOpen:boolean,
-  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  userId: number | null,
+  setUserId: React.Dispatch<React.SetStateAction<number | null>>
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -19,9 +21,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [message,setMessage] = useState("")
   const [loadingText,setLoadingText] = useState<boolean>(false)
   const [sidebarOpen,setSidebarOpen] = useState<boolean>(false)
+  const [userId,setUserId] = useState<number | null>(null)
 
   return (
-    <AuthContext.Provider value={{ loading, setLoading,message,setMessage,setLoadingText,loadingText,sidebarOpen,setSidebarOpen }}>
+    <AuthContext.Provider value={{ loading, setLoading,message,setMessage,setLoadingText,loadingText,sidebarOpen,setSidebarOpen,userId,setUserId }}>
       {children}
     </AuthContext.Provider>
   );

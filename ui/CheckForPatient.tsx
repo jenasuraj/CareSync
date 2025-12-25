@@ -9,10 +9,12 @@ import { SlArrowRight } from "react-icons/sl";
 import { SlArrowLeft } from "react-icons/sl";
 import { GoDotFill } from "react-icons/go";
 import { FcMindMap } from "react-icons/fc";
+import { useAuth } from '@/context/AppContext'
 
 
 const CheckForPatient = () => {
 
+    const {setUserId,userId} = useAuth()
     const [showModal,setShowModal] = useState(false)
     const [formData,setFormData] = useState({name:"",email:"",phone:"",address:""})
     const [step, setStep] = useState(1);
@@ -31,6 +33,10 @@ const CheckForPatient = () => {
         setLoading(true)
         try{
             const response = await axios.get("/api/dashboard/patient") 
+            if(response.data.data){
+                console.log("patient exists",response.data.data.id)
+              setUserId(response.data.data.id)
+            }
         }
         catch(err){
             const error = err as AxiosError<{ message: string }>;
