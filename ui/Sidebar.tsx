@@ -25,8 +25,9 @@ const Sidebar = ({ role }: { role: string}) => {
   console.log("side bar",sidebarOpen)
 
 const handleRoute = (item: dashboard_items_type) => {
+  console.log(item)
   if (item.id === 13) {
-    setSidebarOpen(false)
+    setSidebarOpen(!sidebarOpen)
     return
   }
   let base = ''
@@ -66,7 +67,7 @@ return (
      {dashboard_items.map((item,index)=>{
       if (item.genre && item.genre !== role) return null;
       return(
-        <p className={`${item.id == 13 ? 'cursor-pointer p-2 border border-gray-500 rounded-lg bg-blue-900': ' '}`} key={index} onClick={item.id === 13 ? ()=>setSidebarOpen(true) : undefined}>
+        <p onClick={()=>handleRoute(item)} className={`${item.id == 13 ? 'p-2 border border-gray-700 rounded-lg bg-blue-900': ' ' } cursor-pointer`} key={index}>
           {item.icon}
         </p>
       )
