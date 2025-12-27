@@ -36,6 +36,7 @@ const CheckForPatient = () => {
             if(response.data.data){
                 console.log("patient exists",response.data.data.id)
               setUserId(response.data.data.id)
+              localStorage.setItem("userId", response.data.data.id);
             }
         }
         catch(err){

@@ -14,8 +14,8 @@ interface TableProps<T> {
 export default function Table<T>({ items, columns }: TableProps<T>) {
   console.log("items are ",items,columns)
   return (
-    <table className="w-full table-auto border border-gray-300 divide-y divide-gray-200 ">
-      <thead className="bg-blue-800 text-gray-300">
+    <table className="w-full  table-auto border border-gray-300 divide-y divide-gray-200 ">
+      <thead className="bg-blue-800 text-gray-300 rounded-t-md">
         <tr>
           {columns.map((col, idx) => (
             <th
@@ -28,7 +28,7 @@ export default function Table<T>({ items, columns }: TableProps<T>) {
         </tr>
       </thead>
 
-      <tbody className="bg-white divide-y divide-gray-200">
+      <tbody className="bg-white divide-y divide-gray-200 rounded-b-md">
         {items.map((row, rowIndex) => (
           <tr key={rowIndex} className="hover:bg-gray-50 transition">
             {columns.map((col, colIndex) => (
