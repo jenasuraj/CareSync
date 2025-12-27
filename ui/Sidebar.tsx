@@ -1,5 +1,7 @@
 "use client";
 
+
+import React from "react";
 import { dashboard_items } from "@/data/Doctor";
 import {LuPanelRightClose } from "react-icons/lu";
 import { usePathname } from "next/navigation";
@@ -60,13 +62,15 @@ return (
       );
     })
   : (
-    <div className="w-full flex justify-center items-center">
-      <LuPanelRightClose
-        size={25}
-        color="white"
-        className="cursor-pointer mt-5"
-        onClick={() => setSidebarOpen(true)}
-      />
+    <div className="w-full flex  items-center flex-col h-full gap-10 p-2">
+     {dashboard_items.map((item,index)=>{
+      if (item.genre && item.genre !== role) return null;
+      return(
+        <p className={`${item.id == 13 ? 'cursor-pointer p-2 border border-gray-500 rounded-lg bg-blue-900': ' '}`} key={index} onClick={item.id === 13 ? ()=>setSidebarOpen(true) : undefined}>
+          {item.icon}
+        </p>
+      )
+     })}
     </div>
   )}  
 </aside>

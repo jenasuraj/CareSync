@@ -22,7 +22,7 @@ import { FaUserDoctor } from "react-icons/fa6";
 import { RiNurseLine } from "react-icons/ri";
 import { MdOutlineLocalPharmacy } from "react-icons/md";
 import { BsMotherboard } from "react-icons/bs";
-
+import { VscHistory } from "react-icons/vsc";
 
 export const doctors = [
   {
@@ -141,6 +141,14 @@ export const dashboard_items = [
     back:<GoChevronRight size={20}/>,
     genre:'patient',
     path:'/account'
+  },
+  {
+    id: 14,
+    name: "History",
+    icon:<VscHistory  size={20}/>,
+    back:<GoChevronRight size={20}/>,
+    genre:'patient',
+    path:'/history'
   },
   {
     id: 13,
