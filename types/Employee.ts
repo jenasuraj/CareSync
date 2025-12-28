@@ -26,3 +26,15 @@ export interface appointmentFormdata{
     address: string,
     doctorId: number,
 }
+
+
+
+export interface FormType {
+  name: string;
+  email: string;
+  about: string;
+  profile: string | File;
+  banner: string | File;
+  address: string;
+  phone: string;
+}

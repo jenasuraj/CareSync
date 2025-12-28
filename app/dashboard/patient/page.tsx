@@ -20,7 +20,7 @@ return (
 
 
 <ImageLayout img={img}>
-        <p className='text-white text-3xl md:text-5xl '>Welcome to Medicure</p>
+        <p className='text-white text-3xl md:text-5xl '>Welcome to CareSync</p>
         <p className='text-white text-xl md:text-3xl'>What are your plans today ?</p>
 </ImageLayout>
 
