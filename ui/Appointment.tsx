@@ -41,11 +41,12 @@ const Appointment = () => {
   const [mode,setMode] = useState("online") 
 
   const checkUserOrAdmin = ()=>{
-  if(userId){
-    setP_id(userId)
-  }
-  else if(patientId){
+  const storedId = localStorage.getItem("userId")
+  if(patientId){
     setP_id(patientId)
+  }
+  else if(storedId){
+    setP_id(storedId)
   }
   }
 

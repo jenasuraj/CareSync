@@ -25,10 +25,10 @@ return (
 </ImageLayout>
 
 {/**feature section */}
-<div className='w-full h-auto flex flex-col md:flex-row gap-5'>
+<div className='w-full h-auto flex flex-col md:flex-row gap-5 p-2'>
 {patient_page_items.map((item,index)=>{
   return(
-    <Link href={item.path} key={index} className='bg-sky-50 w-full md:w-1/3 h-40 border border-gray-300 shadow-sm rounded-sm flex items-center justify-center gap-2 hover:cursor-pointer hover:bg-blue-900 hover:text-white duration-700'>
+    <Link href={item.path} key={index} className='bg-blue-900 w-full md:w-1/3 h-40 border text-gray-300 border-gray-300 shadow-sm rounded-sm flex items-center justify-center gap-2 hover:cursor-pointer hover:bg-blue-700 hover:text-white duration-700'>
       <p>{item.name}</p>
       <p className='p-2 bg-blue-900 rounded-md text-white'>{item.icon}</p>
     </Link>
