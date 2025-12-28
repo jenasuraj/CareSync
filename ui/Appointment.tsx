@@ -46,7 +46,7 @@ const Appointment = () => {
     setP_id(patientId)
   }
   else if(storedId){
-    setP_id(storedId)
+    setP_id(Number(storedId))
   }
   }
 
