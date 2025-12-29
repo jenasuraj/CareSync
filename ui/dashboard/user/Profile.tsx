@@ -9,6 +9,9 @@ import img from "@/public/banner.jpg";
 import profimg from "@/public/profile.webp";
 import EditProfileModal from "@/ui/dashboard/user/EditProileModal";
 import { FormType } from "@/types/Employee"; // adjust path if needed
+import type { StaticImageData } from "next/image";
+
+
 
 const EMPTY_FORM: FormType = {
   name: "",
@@ -19,6 +22,9 @@ const EMPTY_FORM: FormType = {
   address: "",
   phone: "",
 };
+
+
+
 
 const Profile = () => {
   const [formData, setFormData] = useState<FormType>(EMPTY_FORM);
@@ -59,13 +65,21 @@ const Profile = () => {
     if (showModal) setTempFormData(formData);
   }, [showModal]);
 
+
+  const getImageSrc = (img: string | File, fallback: StaticImageData) => {
+  if (typeof img === "string" && img.length > 0) return img;
+  if (img instanceof File) return URL.createObjectURL(img);
+  return fallback;
+};
+
+
   return (
     <>
       <section className="w-full max-w-4xl mx-auto text-black p-4 min-h-screen ">
         {/* Banner */}
         <div className="w-full h-[35vh] relative overflow-hidden rounded-t-md">
           <Image
-            src={formData.banner || img}
+            src={getImageSrc(formData.banner, img)}
             alt="banner"
             fill
             className="object-cover"
@@ -73,7 +87,7 @@ const Profile = () => {
 
           <div className="absolute bottom-4 left-6 w-28 h-28 rounded-full overflow-hidden">
             <Image
-              src={formData.profile || profimg}
+              src={getImageSrc(formData.profile, profimg)}
               alt="profile"
               fill
               className="object-cover"
