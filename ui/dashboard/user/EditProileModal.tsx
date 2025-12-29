@@ -29,17 +29,27 @@ export default function EditProfileModal({
 }: Props) {
   if (!isOpen) return null;
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
+  
+const handleChange = (
+  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+) => {
+  const el = e.currentTarget;
+  const name = el.name;
 
-    if (e.target instanceof HTMLInputElement && e.target.files) {
-      setTempFormData((p) => ({ ...p, [name]: e.target.files![0] }));
-    } else {
-      setTempFormData((p) => ({ ...p, [name]: value }));
-    }
-  };
+  if (el instanceof HTMLInputElement && el.type === "file") {
+    setTempFormData(p => ({
+      ...p,
+      [name]: el.files?.[0] ?? null,
+    }));
+  } else {
+    setTempFormData(p => ({
+      ...p,
+      [name]: el.value,
+    }));
+  }
+};
+
+
 
   const handleSubmit = async () => {
     const storedId = localStorage.getItem("userId");
