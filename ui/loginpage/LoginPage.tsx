@@ -15,7 +15,7 @@ const LoginPage = () => {
   const searchParams = useSearchParams();
   const [isLogin, setIsLogin] = useState(true);
   const [formData,setFormData] = useState({email:'',name:'',password:'',hospital_id:'',hospital_password:''}); 
-  const [patientPortal,setPatientPortal] = useState(true);
+  const [patientPortal,setPatientPortal] = useState(false);
   const errorMsg = searchParams.get("error");
   const [localLoading,setLocalLoading] = useState<boolean>(false)
 
@@ -113,11 +113,11 @@ const LoginPage = () => {
       {!patientPortal && (
         <>
           <div className="mb-4">
-            <label className="block mb-2">Hospital ID</label>
+            <label className="block mb-2 ">Hospital ID <span className="text-sm ml-2 text-red-400">jensen</span></label>
             <Input placeholder="Enter your Hospital Id"size="lg" style="outline" valueData={formData.hospital_id} handleChange={handleChange} type="text" name="hospital_id"/> 
           </div>
           <div className="mb-6">
-            <label className="block mb-2">Hospital Password</label>
+            <label className="block mb-2">Hospital Password <span className="text-sm ml-2 text-red-400">Suraj2002@</span></label>
             <Input placeholder="Enter your Hospital Password"size="lg" style="outline" valueData={formData.hospital_password} handleChange={handleChange} type="text" name="hospital_password"/> 
           </div>
         </>
