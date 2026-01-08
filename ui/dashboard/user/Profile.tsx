@@ -41,6 +41,7 @@ const Profile = () => {
       const res = await axios.get("/api/dashboard/user/profile", {
         params: { id: Number(storedId) },
       });
+      
 
       const d = res.data.data;
       setFormData({
