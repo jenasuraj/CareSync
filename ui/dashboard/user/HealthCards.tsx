@@ -55,7 +55,7 @@ const HealthCards = () => {
   /* ---------------- UI ---------------- */
 
 return (
-  <div className="h-[25vh] w-full  grid grid-cols-1 sm:grid-cols-3 gap-4">
+  <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-4">
     {cardData.length === 0 ? (
       <p className="text-gray-200">No health data for today</p>
     ) : (
@@ -108,8 +108,6 @@ return (
     )}
   </div>
 );
-
-
 };
 
 export default HealthCards;
