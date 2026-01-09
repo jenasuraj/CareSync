@@ -1,31 +1,84 @@
+"use client"
+
 import React from 'react'
 import { HiArrowUturnRight } from "react-icons/hi2";
 import { useState } from 'react';
 import axios from 'axios';
+import { RxDotsHorizontal } from "react-icons/rx";
+
 
 interface propTypes {
   buttonClicked:boolean,
   setButtonClicked:React.Dispatch<React.SetStateAction<boolean>>;
 }
+interface conversationType {
+  user:string,
+  agent:string
+}
 
 const Agent = ({buttonClicked,setButtonClicked}:propTypes) => {
   const [inputData,setInputData] = useState("")
+  const [conversation,setConversation] = useState<conversationType[]>([])
+
+  const showStreamingResponse = (agent_response:string) => {
+    const text_chunks = agent_response.split(' ')
+    let idx:number = 0
+    const interval = setInterval(()=>{
+        setConversation(prev=>{
+         const last = prev[prev.length - 1]
+         const updatedLast = { ...last, agent: last["agent"] +" "+ text_chunks[idx]}
+           return [
+          ...prev.slice(0, -1),
+          updatedLast
+        ]
+        })
+        idx+=1
+        if(idx == text_chunks.length-1){
+          clearInterval(interval)
+        }
+    },100)
+  }
+
   const handleAskQuery = async()=>{
     if(inputData != ""){
+      const initial_obj = {
+                            user: inputData,
+                            agent: ""
+                      }
+      setConversation(prev=>[...prev,(initial_obj)])                    
       setButtonClicked(true)
       const response = await axios.post('http://127.0.0.1:8000',{query:inputData})
       if(response){
-        console.log(response.data.message)
-      }
+        showStreamingResponse(response.data.message)
       setInputData("")
-
     }
   }
+}
 
-  return (
+return (
 <div className="h-auto flex flex-col w-full  gap-5 justify-center items-center p-4">
   {buttonClicked && (
-    <div className='border border-gray-200 w-full lg:w-2/3 h-[70vh] rounded-2xl'></div>
+    <div className='border border-gray-200 w-full lg:w-2/3 p-4 h-[70vh] overflow-y-auto rounded-2xl'>
+      {conversation.map((item, index) => (
+        <div key={index} className="flex flex-col gap-2">
+
+          {/* User message */}
+          <div className="self-start max-w-[70%]">
+            <p className="px-4 py-2 rounded-lg border shadow-sm bg-white text-gray-800">
+              {item.user}
+            </p>
+          </div>
+
+          {/* Agent message */}
+          <div className="self-end max-w-[70%]">
+            <p className="px-4 py-2 rounded-lg bg-blue-800 text-gray-200 shadow-sm">
+              {item.agent || <RxDotsHorizontal size={20} color='white'/>}
+            </p>
+          </div>
+
+        </div>
+      ))}
+    </div>
   )}
   <div className="relative w-full lg:w-2/3">
     <input value={inputData}
