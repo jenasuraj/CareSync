@@ -1,1 +1,1 @@
-The project is not ready yet ! it's approx 80% completed
+The project is not ready yet ! it's approx 90% completed
