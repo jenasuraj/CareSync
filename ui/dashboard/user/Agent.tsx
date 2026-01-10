@@ -5,7 +5,7 @@ import { HiArrowUturnRight } from "react-icons/hi2";
 import { useState } from 'react';
 import axios from 'axios';
 import { RxDotsHorizontal } from "react-icons/rx";
-
+import { useRef,useEffect } from 'react';
 
 interface propTypes {
   buttonClicked:boolean,
@@ -17,6 +17,7 @@ interface conversationType {
 }
 
 const Agent = ({buttonClicked,setButtonClicked}:propTypes) => {
+  const bottomRef = useRef<HTMLDivElement | null>(null)
   const [inputData,setInputData] = useState("")
   const [conversation,setConversation] = useState<conversationType[]>([])
 
@@ -39,15 +40,20 @@ const Agent = ({buttonClicked,setButtonClicked}:propTypes) => {
     },100)
   }
 
+  useEffect(() => {
+  bottomRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [conversation])
+
   const handleAskQuery = async()=>{
     if(inputData != ""){
+      const storedId = localStorage.getItem("userId");
       const initial_obj = {
                             user: inputData,
                             agent: ""
                       }
       setConversation(prev=>[...prev,(initial_obj)])                    
       setButtonClicked(true)
-      const response = await axios.post('http://127.0.0.1:8000',{query:inputData})
+      const response = await axios.post('http://127.0.0.1:8000',{query:inputData,patient_id:Number(storedId)})
       if(response){
         showStreamingResponse(response.data.message)
       setInputData("")
@@ -58,9 +64,9 @@ const Agent = ({buttonClicked,setButtonClicked}:propTypes) => {
 return (
 <div className="h-auto flex flex-col w-full  gap-5 justify-center items-center p-4">
   {buttonClicked && (
-    <div className='border border-gray-200 w-full lg:w-2/3 p-4 h-[70vh] overflow-y-auto rounded-2xl'>
+    <div className='border border-gray-200 w-full lg:w-2/3 p-4 h-[70vh] overflow-y-auto rounded-2xl '>
       {conversation.map((item, index) => (
-        <div key={index} className="flex flex-col gap-2">
+        <div key={index} className="flex flex-col gap-2 mt-2">
 
           {/* User message */}
           <div className="self-start max-w-[70%]">
@@ -70,7 +76,7 @@ return (
           </div>
 
           {/* Agent message */}
-          <div className="self-end max-w-[70%]">
+          <div className="self-end max-w-[70%]" ref={bottomRef}>
             <p className="px-4 py-2 rounded-lg bg-blue-800 text-gray-200 shadow-sm">
               {item.agent || <RxDotsHorizontal size={20} color='white'/>}
             </p>

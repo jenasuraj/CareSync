@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 
 const Footer = () => {
   const pathname = usePathname()
-  if(!pathname.startsWith('/dashboard/admin')){
+  if(!pathname.startsWith('/dashboard')){
   return (
     <>
       <section className='text-white w-full h-24 bg-black flex flex-col md:flex-row items-center justify-between px-5 py-4'>

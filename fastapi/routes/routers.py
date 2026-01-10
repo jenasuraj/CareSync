@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from models.user import QueryRequest
+from schemas.user import QueryRequest
 router = APIRouter()
 from agent.agent import graph
 
@@ -12,7 +12,7 @@ def read_root():
 def ask_query(data: QueryRequest):
     print("Received query:", data.query)
     result =  graph.invoke(
-    {"messages": [{"role": "user", "content": f"{data.query}"}]},
+    {"messages": [{"role": "user", "content": f"query is: {data.query} & patient_id is: {data.patient_id}"}]},
     {"configurable": {"thread_id": "1"}},
     )
     final_data = result["messages"][-1].content
