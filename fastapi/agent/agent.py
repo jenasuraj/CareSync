@@ -1,13 +1,10 @@
 from langgraph.graph import StateGraph, START, END
 from dotenv import load_dotenv
-load_dotenv()
 from langgraph.checkpoint.memory import InMemorySaver
-checkpointer = InMemorySaver()
 from typing_extensions import TypedDict
 from typing import Annotated
 from langgraph.graph.message import add_messages
 from langchain_openai import ChatOpenAI
-import os
 from langchain_core.messages import AIMessage
 from langgraph.prebuilt import create_react_agent
 from langchain.tools import tool
@@ -21,6 +18,10 @@ from util.database import get_db
 from services.doctor import get_all_doctors
 from schemas.doctor import DoctorResponse
 from services.appointment import create_appointment
+from services.health_data import health_data_submit
+import os
+checkpointer = InMemorySaver()
+load_dotenv()
 
 
 
@@ -28,11 +29,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 rag_path = os.path.join(BASE_DIR, "agent.txt")
 loader = TextLoader(
     file_path=rag_path,
-    encoding="utf-8"
-)
+    encoding="utf-8")
 
 docs = loader.load()
-# 2. Split text into semantically useful chunks
 text_splitter = RecursiveCharacterTextSplitter(
     chunk_size=1000,        # large enough to hold table logic + rules
     chunk_overlap=200,      # preserves reasoning continuity
@@ -75,11 +74,30 @@ def book_appointment(date, doc_id, p_id):
 
 
 @tool
-def track_health(id,calorieburnt,caloriegained):
-    """use this tool to book appointment for user.. in order to use this tool, provide patients id and calorieburnt (ex: 250), 
-    caloriegained (ex:1050), exercise (ex: 2:50 where 2 is hr and 50 is min)"""
-    print("track_health tool was called",id,calorieburnt,caloriegained)
+def save_health_data(p_id,calorieburnt,caloriegained,exercise_time):
+    """use this tool to track/add user's fitness data (for ex: calorie taken,calorieburnt ,exercise time)"""
+    print("save_health_data tool was called",p_id,calorieburnt,caloriegained,exercise_time)
+    db = next(get_db())
+    try:
+        card = health_data_submit(
+            db=db,
+            p_id=p_id,
+            caloriegained=caloriegained,
+            calorieburnt=caloriegained,
+            exercise_time=exercise_time
+        )
+        print("response is",card)
+        return { "message": "health data saved successfully"}
+    finally:
+        db.close()
+
+
+@tool
+def track_health(p_id):
+    """use this tool to track users health"""
+    print("track_health tool was called",)
     return "users health updated and is being tracked"
+
 
 @tool
 def rag_lookup(query: str):
@@ -118,7 +136,7 @@ def node1(state:State):
         You are CareSync AI, a careful highly sequential, intelligent and rule-driven medical assistant.
         Your job is to assist patients in:
         1 - Booking medical appointments.
-        2 - Tracking daily health data.
+        2 - Tracking and saving user's health data.
         You must behave conservatively and NEVER assume missing information all by your own.
 
         -------------------------------
@@ -129,13 +147,14 @@ def node1(state:State):
         3 - ALWAYS ask follow-up questions if required data is missing.
         4 - Analyse user's intention and if the intension meets calling tools, then you should call otherwise dont explicitely call tools.
         5 - You can call one tool to get information and use that information in other tool as input . Ex: you can call 'show_doctors' tool and take doctor's id and use that id in 'book_appointments' tool.
-        6 - Until the user explicitly mentions appointment booking or health tracking, stay in a neutral conversation mode.
-        7 - In neutral mode:
+        6 - If user provides any of the following (calories taken, calories burnt or total duration of exercise) of that particular day only, then you have to use 'save_health_data' tool to submit data so that you can track users health. 
+        7 - Until the user explicitly mentions appointment booking or health tracking or statements that involves booking appointment or tracking past health data or providing per day health data, stay in a neutral conversation mode.
+        8 - In neutral mode:
             - DO NOT call any tools.
             - DO NOT ask for medical, appointment, or health-related data.
             - DO NOT describe capabilities.
             - Respond briefly and conversationally.
-        8 - Only transition out of neutral mode when the user clearly states intent related to:
+        9 - Only transition out of neutral mode when the user clearly states intent related to:
             - booking an appointment
             - tracking health data
 
@@ -152,15 +171,22 @@ def node1(state:State):
         -------------------------------
         1 - rag_lookup: Understand database structure and rules
         2 - show_doctors: Use this tool to fetch doctors information for ex: (id,name,experience,status etc..). Basically you need to call this tool to fetch doctors name so that user can select a doctor and later during booking time, you can call this tool to retrive the id of the particular doctor so that you can pass patient_id,doctor_id and date to 'book_appointment' tool.
-        3 - book_appointment: Book appointment (ONLY after confirmation). In order to book appointment using this tool, you have to provide doctors id, patients id and date. so provide necessary information and you can call 'show_doctors' tool to fetch doctors id.
-        4 - track_health: Store daily health data
+        3 - book_appointment: Book appointment (ONLY after confirmation). In order to book appointment using this tool, you have to provide doctors id, patients id and date. so provide necessary information and you can call 'show_doctors' tool to fetch doctors id. Always pass date as (year-month-date) format for ex: 2026-10-10.
+        4 - track_health: use this tool to fetch past health data and provide a health report.
+        5 - save_health_data: use this tool to save users daily health routine data (calories taken, calories burnt or total duration of exercise)
+
+        
+        -------------------------------
+        OUTPUT FORMAT
+        -------------------------------
+        Always return the final response in HTML format using only h2,p,bullet list elements.
 
         -------------------------------
         CONVERSATION SO FAR
         -------------------------------
         {messages}
         """
-    agent = create_react_agent(model=llm,tools=[book_appointment,rag_lookup,track_health,show_doctors],prompt=prompt)
+    agent = create_react_agent(model=llm,tools=[book_appointment,rag_lookup,track_health,show_doctors,save_health_data],prompt=prompt)
     response = agent.invoke({"messages": state["messages"]})
     return{
         "messages":state["messages"]+[AIMessage(content=response["messages"][-1].content)]

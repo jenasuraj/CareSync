@@ -4,8 +4,8 @@ import React from 'react'
 import { HiArrowUturnRight } from "react-icons/hi2";
 import { useState } from 'react';
 import axios from 'axios';
-import { RxDotsHorizontal } from "react-icons/rx";
 import { useRef,useEffect } from 'react';
+
 
 interface propTypes {
   buttonClicked:boolean,
@@ -23,7 +23,7 @@ const Agent = ({buttonClicked,setButtonClicked}:propTypes) => {
 
   const showStreamingResponse = (agent_response:string) => {
     const text_chunks = agent_response.split(' ')
-    let idx:number = 0
+    let idx:number = -1
     const interval = setInterval(()=>{
         setConversation(prev=>{
          const last = prev[prev.length - 1]
@@ -76,10 +76,8 @@ return (
           </div>
 
           {/* Agent message */}
-          <div className="self-end max-w-[70%]" ref={bottomRef}>
-            <p className="px-4 py-2 rounded-lg bg-blue-800 text-gray-200 shadow-sm">
-              {item.agent || <RxDotsHorizontal size={20} color='white'/>}
-            </p>
+          <div className="self-end max-w-[70%]" ref={bottomRef} >
+             <p className="px-4 py-2 rounded-lg bg-blue-800 text-gray-200 shadow-sm" dangerouslySetInnerHTML={{ __html: item.agent }} />
           </div>
 
         </div>
