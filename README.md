@@ -7,8 +7,6 @@
     AI-driven workflows and automation for modern healthcare operations.
   </p>
 
-  <hr />
-
   <h2>🚀 Tech Stack</h2>
 
   <h3>Frontend</h3>
@@ -30,7 +28,6 @@
     <li>SQL-based database (PostgreSQL – configurable)</li>
   </ul>
 
-  <hr />
 
   <h2>✨ Features</h2>
   <ul>
@@ -43,7 +40,6 @@
     <li>🌐 Modern and responsive UI</li>
   </ul>
 
-  <hr />
 
   <h2>🛠️ Installation & Setup</h2>
 
@@ -72,7 +68,6 @@ uvicorn main:app --reload
   <p>Backend API will run at:</p>
   <pre>http://localhost:8000</pre>
 
-  <hr />
 
   <h2>📌 Roadmap / To-Do</h2>
   <ul>
@@ -80,7 +75,6 @@ uvicorn main:app --reload
     <li>🧾 Billing and payment integration</li>
   </ul>
 
-  <hr />
 
   <h2>🧑‍💻 Author</h2>
   <p>
