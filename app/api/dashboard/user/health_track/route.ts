@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
     );
     }
     else{
-      const response = { calorieburnt: '00', caloriegained: '00', exercise: '00:00' }
+      const response = { calorieburnt: '00', caloriegained: '00', exercise: '00:00'}
     const cardData = Object.entries(response).map(([key, value]) => ({
     name: key,
     value: value,
