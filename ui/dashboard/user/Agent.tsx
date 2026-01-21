@@ -64,7 +64,7 @@ const Agent = ({buttonClicked,setButtonClicked}:propTypes) => {
 return (
 <div className="h-auto flex flex-col w-full  gap-5 justify-center items-center p-4">
   {buttonClicked && (
-    <div className='border border-gray-200 w-full lg:w-2/3 p-4 h-[70vh] overflow-y-auto rounded-2xl '>
+    <div className={`${buttonClicked ? ' w-full h-[80vh]' : 'lg:w-2/3 h-[70vh]'} border border-gray-200 p-4 bg-gray-200 overflow-y-auto rounded-2xl`}>
       {conversation.map((item, index) => (
         <div key={index} className="flex flex-col gap-2 mt-2">
 
@@ -84,7 +84,7 @@ return (
       ))}
     </div>
   )}
-  <div className="relative w-full lg:w-2/3">
+  <div className={`${buttonClicked ? 'w-full' : 'w-full lg:w-2/3'} relative`}>
     <input value={inputData}
     onChange={(e)=>setInputData(e.target.value)}
       type="text"
