@@ -86,7 +86,7 @@ return (
               <p className="text-2xl font-bold text-white">
                 {value}
                 <span className="text-sm font-normal text-gray-200 ml-1">
-                  kcal
+                  {card.name === 'exercise' ? 'Min' : 'Kcal'}
                 </span>
               </p>
               <p className="text-xs text-gray-300 mt-1">
