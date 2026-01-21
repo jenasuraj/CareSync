@@ -70,7 +70,7 @@ return (
         return (
           <div
             key={card.name}
-            className="rounded-lg bg-blue-800 border border-blue-700 p-4 flex flex-col gap-4 shadow-sm hover:shadow-lg transition"
+            className={`${buttonClicked ? 'bg-gray-500' : 'bg-blue-800 border border-blue-700'} rounded-lg  p-4 flex flex-col gap-4 shadow-sm hover:shadow-lg transition`}
           >
             {/* Header */}
             <div className="flex items-center justify-between">

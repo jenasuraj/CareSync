@@ -4,6 +4,7 @@ from services.doctor import get_all_doctors
 from schemas.doctor import DoctorResponse
 from services.appointment import create_appointment
 from services.health_data import health_data_submit
+from services.health_report import get_health_report
 from agent.rag import retriever
 
 @tool
@@ -45,9 +46,14 @@ def save_health_data(p_id,calorieburnt,caloriegained,exercise_time):
 
 @tool
 def track_health(p_id):
-    """use this tool to track users health"""
-    print("track_health tool was called",)
-    return "users health updated and is being tracked"
+    """use this tool to track patient's health including duration of exercise patient does, calorie usage etc. Make sure provide patient's ID as input to use this tool"""
+    print("track_health tool was called",p_id)
+    db = next(get_db())
+    try:
+        response = get_health_report(db = db,p_id = p_id)
+        return response
+    finally:
+        db.close()
 
 
 @tool

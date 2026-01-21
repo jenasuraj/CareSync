@@ -89,7 +89,7 @@ return (
     onChange={(e)=>setInputData(e.target.value)}
       type="text"
       placeholder="What you want me to do, Book appointments ?"
-      className=" px-6 py-4 border border-gray-300 rounded-full w-full"
+      className=" px-6 py-4 border border-gray-300 rounded-full w-full bg-gray-200"
     />
 
     <button onClick={handleAskQuery} className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-blue-800 rounded-full hover:bg-blue-500 duration-300 cursor-pointer">
