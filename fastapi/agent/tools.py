@@ -34,7 +34,7 @@ def save_health_data(p_id,calorieburnt,caloriegained,exercise_time):
             db=db,
             p_id=p_id,
             caloriegained=caloriegained,
-            calorieburnt=caloriegained,
+            calorieburnt=calorieburnt,
             exercise_time=exercise_time
         )
         print("response is",card)
